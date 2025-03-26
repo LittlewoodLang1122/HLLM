@@ -211,6 +211,7 @@ class Trainer(object):
                     msg = msg + f" grad_norm: {grad_norm.sum():.4f}"
                 pbar.set_postfix_str(msg, refresh=False)
                 pbar.update(self.update_interval)
+                self.logger.info(msg + '\n')
                 self.logger.info("\n" + "-"*50)
             if self.config['debug'] and batch_idx >= 10:
                 break

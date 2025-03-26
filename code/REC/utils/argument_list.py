@@ -47,3 +47,10 @@ dataset_arguments = [
     'text_keys',
     'item_prompt',
 ]
+
+lora_arguments = [
+    'use_LoRA',
+    'LoRA_Rank',
+    'LoRA_Alpha',
+    'LoRA_Dropout',
+]

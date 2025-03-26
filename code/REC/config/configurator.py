@@ -10,7 +10,9 @@ from logging import getLogger
 from enum import Enum
 from REC.evaluator import metric_types, smaller_metrics
 from REC.utils import get_model, \
-    general_arguments, training_arguments, evaluation_arguments, dataset_arguments, set_color
+    general_arguments, training_arguments, \
+    evaluation_arguments, dataset_arguments, lora_arguments, \
+    set_color
 
 
 class Config(object):
@@ -29,6 +31,7 @@ class Config(object):
         self.parameters['Training'] = training_arguments
         self.parameters['Evaluation'] = evaluation_arguments
         self.parameters['Dataset'] = dataset_arguments
+        self.parameters['LoRA'] = lora_arguments
 
     def _build_yaml_loader(self):
         loader = yaml.FullLoader
@@ -93,6 +96,10 @@ class Config(object):
         return config_dict
 
     def _set_default_parameters(self):
+        self.final_config_dict.setdefault('use_LoRA', False)
+        self.final_config_dict.setdefault('LoRA_Rank', 8)
+        self.final_config_dict.setdefault('LoRA_Alpha', 16)
+        self.final_config_dict.setdefault('LoRA_Dropout', 0)
 
         if hasattr(self.model_class, 'input_type'):
             self.final_config_dict['MODEL_INPUT_TYPE'] = self.model_class.input_type

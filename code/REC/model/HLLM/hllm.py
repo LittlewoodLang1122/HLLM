@@ -20,6 +20,7 @@ import numpy as np
 import transformers
 from transformers import AutoConfig, AutoModelForCausalLM
 from logging import getLogger
+from peft import get_peft_model, LoraConfig, TaskType
 
 from REC.utils.enum_type import InputType
 from REC.model.basemodel import BaseModel, all_gather
@@ -28,6 +29,15 @@ from REC.model.HLLM.modeling_mistral import MistralForCausalLM
 from REC.model.HLLM.modeling_bert import BertModel
 from REC.model.HLLM.baichuan.modeling_baichuan import BaichuanForCausalLM
 
+def add_lora_to_llm(llm, r=8, alpha=16, dropout=0.05):
+    peft_config = LoraConfig(
+        r=r,
+        lora_alpha=alpha,
+        lora_dropout=dropout,
+        bias="none",
+        task_type=TaskType.CAUSAL_LM  # 如果是BERT可用 TaskType.FEATURE_EXTRACTION
+    )
+    return get_peft_model(llm, peft_config)
 
 class HLLM(BaseModel):
     input_type = InputType.SEQ
@@ -47,6 +57,9 @@ class HLLM(BaseModel):
         self.item_emb_token_n = config['item_emb_token_n']
         if self.item_emb_token_n > 1:
             raise NotImplementedError(f"Not support item_emb_token_n {self.item_emb_token_n} > 1")
+        if config.use_LoRA:
+            self.item_llm = add_lora_to_llm(self.item_llm, r=config['LoRA_Rank'], alpha=config["LoRA_Alpha"], dropout=config["LoRA_Dropout"])
+            self.user_llm = add_lora_to_llm(self.user_llm, r=config['LoRA_Rank'], alpha=config["LoRA_Alpha"], dropout=config["LoRA_Dropout"])
 
         if self.item_emb_token_n > 0:
             self.item_emb_tokens = nn.Parameter(
