@@ -72,7 +72,8 @@ class Trainer(object):
         self.best_valid_result = None
         self.train_loss_dict = dict()
         self.optimizer = self._build_optimizer()
-        self.update_interval = config['update_interval'] if config['update_interval'] else 20
+        self.update_interval = config['update_interval'] if config['update_interval'] else 80
+        self.gradient_accumulation_steps = config['gradient_accumulation_steps']
         self.scheduler_config = config['scheduler_args']
         if config['freeze_prefix'] or config['freeze_ad']:
             freeze_prefix = config['freeze_prefix'] if config['freeze_prefix'] else []
@@ -183,20 +184,33 @@ class Trainer(object):
                 file=sys.stdout
             )
         bwd_time = t.time()
+        grad_norm = None
         for batch_idx, data in enumerate(train_data):
             start_time = bwd_time
-            self.optimizer.zero_grad()
+            if batch_idx % self.gradient_accumulation_steps == 0:
+                self.optimizer.zero_grad()
+
             data = self.to_device(data)
             data_time = t.time()
             losses = self.model(data)
             fwd_time = t.time()
+
             if self.config['loss'] and self.config['loss'] == 'nce':
                 model_out = losses
                 losses = model_out.pop('loss')
+
             self._check_nan(losses)
-            total_loss = total_loss + losses.item()
+            total_loss += losses.item()
+
+            # normalize loss to avoid exploding gradients
+            losses = losses / self.gradient_accumulation_steps
             self.lite.backward(losses)
-            grad_norm = self.optimizer.step()
+
+            if (batch_idx + 1) % self.gradient_accumulation_steps == 0 or (batch_idx + 1) == len(train_data):
+                grad_norm = self.optimizer.step()
+                if self.scheduler_config:
+                    self.lr_scheduler.step()
+
             bwd_time = t.time()
             if self.scheduler_config:
                 self.lr_scheduler.step()
@@ -207,7 +221,7 @@ class Trainer(object):
                 if self.config['loss'] and self.config['loss'] == 'nce':
                     for k, v in model_out.items():
                         msg += f" {k}: {v:.3f}"
-                if grad_norm:
+                if grad_norm is not None:
                     msg = msg + f" grad_norm: {grad_norm.sum():.4f}"
                 pbar.set_postfix_str(msg, refresh=False)
                 pbar.update(self.update_interval)
