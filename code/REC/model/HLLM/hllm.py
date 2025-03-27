@@ -264,8 +264,8 @@ class HLLM(BaseModel):
         user_embedding = self.user_llm(inputs_embeds=pos_embedding[:, :-1], attention_mask=user_attention_mask).hidden_states[-1]
 
         model_out = {}
-        if self.debug:
-            self.logger.info(f"[Shape Check] user_emb: {user_embedding.shape}, pos_emb: {target_pos_embs.shape}, neg_emb: {target_neg_embs.shape}")
+        # if self.debug:
+        #     self.logger.info(f"[Shape Check] user_emb: {user_embedding.shape}, pos_emb: {target_pos_embs.shape}, neg_emb: {target_neg_embs.shape}")
         logits, labels = self.nce_loss(user_embedding, target_pos_embs, target_neg_embs, user_attention_mask)
         model_out['loss'] = F.cross_entropy(logits, labels)
         model_out['nce_samples'] = (logits > torch.finfo(logits.dtype).min/100).sum(dim=1).float().mean()  # samples after filtering same negatives

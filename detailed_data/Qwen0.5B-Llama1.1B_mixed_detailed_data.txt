@@ -1,0 +1,59 @@
+Trainable parameters: 4045697.0
+Thu 27 Mar 2025 21:16:37 INFO  Use consine scheduler with 37941.0 warmup 379410 total steps
+Thu 27 Mar 2025 21:16:37 INFO  Use deepspeed strategy
+Thu 27 Mar 2025 21:16:41 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 21:16:41 INFO  [Debug] Pos logits mean: 0.9766
+Thu 27 Mar 2025 21:16:41 INFO  [Debug] Neg logits mean: 0.9023
+Thu 27 Mar 2025 21:16:41 INFO  [Debug] Pos - Neg gap: 0.0742
+Thu 27 Mar 2025 21:16:41 INFO  [Debug] Logits (max/min/std): 0.9883 / 0.6992 / 0.0510
+Thu 27 Mar 2025 21:16:41 INFO  [Debug] User emb norm: 87.0000
+Thu 27 Mar 2025 21:16:41 INFO  [Debug] Pos emb norm: 266.0000
+Thu 27 Mar 2025 21:16:41 INFO  [Debug] Cosine similarity (mean/max/min): 0.9766 / 0.9883 / 0.9219
+Thu 27 Mar 2025 21:16:41 INFO  lr: 0.0000000 accum_loss: 0.0365 data: 1.194 fwd: 0.729 bwd: 0.248 nce_samples: 45.000 nce_top1_acc: 1.000 nce_top5_acc: 1.000 nce_top10_acc: 1.000
+
+Thu 27 Mar 2025 21:16:41 INFO  
+--------------------------------------------------
+Thu 27 Mar 2025 21:16:41 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 21:16:41 INFO  [Debug] Pos logits mean: 0.9766
+Thu 27 Mar 2025 21:16:41 INFO  [Debug] Neg logits mean: 0.9023
+Thu 27 Mar 2025 21:16:41 INFO  [Debug] Pos - Neg gap: 0.0742
+Thu 27 Mar 2025 21:16:41 INFO  [Debug] Logits (max/min/std): 0.9883 / 0.7031 / 0.0469
+Thu 27 Mar 2025 21:16:41 INFO  [Debug] User emb norm: 87.0000
+Thu 27 Mar 2025 21:16:41 INFO  [Debug] Pos emb norm: 266.0000
+Thu 27 Mar 2025 21:16:41 INFO  [Debug] Cosine similarity (mean/max/min): 0.9766 / 0.9883 / 0.9375
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Pos logits mean: 0.9766
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Neg logits mean: 0.9023
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Pos - Neg gap: 0.0742
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Logits (max/min/std): 0.9961 / 0.6875 / 0.0562
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] User emb norm: 87.0000
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Pos emb norm: 266.0000
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Cosine similarity (mean/max/min): 0.9727 / 0.9922 / 0.8438
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Pos logits mean: 0.9727
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Neg logits mean: 0.9062
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Pos - Neg gap: 0.0664
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Logits (max/min/std): 0.9922 / 0.6289 / 0.0723
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] User emb norm: 87.0000
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Pos emb norm: 266.0000
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Cosine similarity (mean/max/min): 0.9727 / 0.9922 / 0.8633
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Pos logits mean: 0.9766
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Neg logits mean: 0.9023
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Pos - Neg gap: 0.0742
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Logits (max/min/std): 0.9883 / 0.6523 / 0.0649
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] User emb norm: 87.0000
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Pos emb norm: 260.0000
+Thu 27 Mar 2025 21:16:42 INFO  [Debug] Cosine similarity (mean/max/min): 0.9727 / 0.9883 / 0.8828
+Thu 27 Mar 2025 21:16:43 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 21:16:43 INFO  [Debug] Pos logits mean: 0.9766
+Thu 27 Mar 2025 21:16:43 INFO  [Debug] Neg logits mean: 0.9023
+Thu 27 Mar 2025 21:16:43 INFO  [Debug] Pos - Neg gap: 0.0742
+Thu 27 Mar 2025 21:16:43 INFO  [Debug] Logits (max/min/std): 0.9883 / 0.6797 / 0.0649
+Thu 27 Mar 2025 21:16:43 INFO  [Debug] User emb norm: 87.0000
+Thu 27 Mar 2025 21:16:43 INFO  [Debug] Pos emb norm: 266.0000
+Thu 27 Mar 2025 21:16:43 INFO  [Debug] Cosine similarity (mean/max/min): 0.9766 / 0.9883 / 0.9219
+Thu 27 Mar 2025 21:16:43 INFO  epoch 0 training [time: 4.44s, train loss: 17.7812]
+Thu 27 Mar 2025 21:16:49 INFO  Text Item num: 96282
+Thu 27 Mar 2025 21:16:49 INFO  Inference item_data with item_batch_size = 20 len(item_loader) = 4815
+Thu 27 Mar 2025 21:16:50 INFO   not in self.env

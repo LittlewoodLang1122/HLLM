@@ -41,3 +41,33 @@ python3 main.py \
 --precision bf16-mixed \
 --use_LoRA True \
 --debug True
+
+# Qwen2 LLama mixed, not work!
+python3 main.py \
+--config_file overall/LLM_deepspeed.yaml HLLM/HLLM.yaml \
+--MAX_ITEM_LIST_LENGTH 10 --epochs 5 --optim_args.learning_rate 5e-6 \
+--checkpoint_dir ../ckpt \
+--loss nce --MAX_TEXT_LENGTH 64 --dataset Pixel200K \
+--text_path /root/HLLM/information \
+--item_pretrain_dir Qwen/Qwen2.5-0.5B-Instruct \
+--user_pretrain_dir TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T \
+--train_batch_size 2 \
+--gradient_accumulation_steps 8 \
+--precision bf16-mixed \
+--use_LoRA True \
+--debug True
+
+# LLama Qwen2 mixed
+python3 main.py \
+--config_file overall/LLM_deepspeed.yaml HLLM/HLLM.yaml \
+--MAX_ITEM_LIST_LENGTH 10 --epochs 5 --optim_args.learning_rate 5e-6 \
+--checkpoint_dir ../ckpt \
+--loss nce --MAX_TEXT_LENGTH 64 --dataset Pixel200K \
+--text_path /root/HLLM/information \
+--item_pretrain_dir TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T \
+--user_pretrain_dir Qwen/Qwen2.5-0.5B-Instruct \
+--train_batch_size 2 \
+--gradient_accumulation_steps 8 \
+--precision bf16-mixed \
+--use_LoRA True \
+--debug True
