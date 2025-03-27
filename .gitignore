@@ -5,3 +5,4 @@ code/log_tensorboard/
 code/saved/
 dataset/Pixel200K.csv
 information/Pixel200K.csv
+all_in_one.ipynb
