@@ -1,0 +1,179 @@
+Trainable parameters: 2254849.0
+Thu 27 Mar 2025 07:05:03 INFO  Use consine scheduler with 18970.5 warmup 189705 total steps
+Thu 27 Mar 2025 07:05:03 INFO  Use deepspeed strategy
+Thu 27 Mar 2025 07:05:09 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 07:05:09 INFO  [Debug] Pos logits mean: 0.5703
+Thu 27 Mar 2025 07:05:09 INFO  [Debug] Neg logits mean: 0.5469
+Thu 27 Mar 2025 07:05:09 INFO  [Debug] Pos - Neg gap: 0.0234
+Thu 27 Mar 2025 07:05:09 INFO  [Debug] Logits (max/min/std): 0.8047 / 0.0386 / 0.0981
+Thu 27 Mar 2025 07:05:09 INFO  [Debug] User emb norm: 91.5000
+Thu 27 Mar 2025 07:05:09 INFO  [Debug] Pos emb norm: 71.5000
+Thu 27 Mar 2025 07:05:09 INFO  [Debug] Cosine similarity (mean/max/min): 0.5664 / 0.7969 / 0.3672
+Thu 27 Mar 2025 07:05:09 INFO  lr: 0.0000000 accum_loss: 0.0602 data: 2.015 fwd: 0.927 bwd: 0.513 nce_samples: 89.000 nce_top1_acc: 0.054 nce_top5_acc: 0.108 nce_top10_acc: 0.176 nce_top50_acc: 0.608
+
+Thu 27 Mar 2025 07:05:09 INFO  
+--------------------------------------------------
+Thu 27 Mar 2025 07:05:10 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 07:05:10 INFO  [Debug] Pos logits mean: 0.5781
+Thu 27 Mar 2025 07:05:10 INFO  [Debug] Neg logits mean: 0.5586
+Thu 27 Mar 2025 07:05:10 INFO  [Debug] Pos - Neg gap: 0.0195
+Thu 27 Mar 2025 07:05:10 INFO  [Debug] Logits (max/min/std): 0.8242 / 0.1484 / 0.0908
+Thu 27 Mar 2025 07:05:10 INFO  [Debug] User emb norm: 91.5000
+Thu 27 Mar 2025 07:05:10 INFO  [Debug] Pos emb norm: 70.5000
+Thu 27 Mar 2025 07:05:10 INFO  [Debug] Cosine similarity (mean/max/min): 0.5781 / 0.7539 / 0.2852
+Thu 27 Mar 2025 07:05:11 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 07:05:11 INFO  [Debug] Pos logits mean: 0.5391
+Thu 27 Mar 2025 07:05:11 INFO  [Debug] Neg logits mean: 0.5430
+Thu 27 Mar 2025 07:05:11 INFO  [Debug] Pos - Neg gap: -0.0039
+Thu 27 Mar 2025 07:05:11 INFO  [Debug] Logits (max/min/std): 0.8555 / 0.0347 / 0.1045
+Thu 27 Mar 2025 07:05:11 INFO  [Debug] User emb norm: 91.0000
+Thu 27 Mar 2025 07:05:11 INFO  [Debug] Pos emb norm: 71.5000
+Thu 27 Mar 2025 07:05:11 INFO  [Debug] Cosine similarity (mean/max/min): 0.5391 / 0.7070 / 0.3242
+Thu 27 Mar 2025 07:05:12 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 07:05:12 INFO  [Debug] Pos logits mean: 0.5430
+Thu 27 Mar 2025 07:05:12 INFO  [Debug] Neg logits mean: 0.5391
+Thu 27 Mar 2025 07:05:12 INFO  [Debug] Pos - Neg gap: 0.0039
+Thu 27 Mar 2025 07:05:12 INFO  [Debug] Logits (max/min/std): 0.8438 / 0.1504 / 0.0981
+Thu 27 Mar 2025 07:05:12 INFO  [Debug] User emb norm: 91.0000
+Thu 27 Mar 2025 07:05:12 INFO  [Debug] Pos emb norm: 71.0000
+Thu 27 Mar 2025 07:05:12 INFO  [Debug] Cosine similarity (mean/max/min): 0.5430 / 0.8242 / 0.2676
+Thu 27 Mar 2025 07:05:12 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 07:05:12 INFO  [Debug] Pos logits mean: 0.5625
+Thu 27 Mar 2025 07:05:12 INFO  [Debug] Neg logits mean: 0.5469
+Thu 27 Mar 2025 07:05:12 INFO  [Debug] Pos - Neg gap: 0.0156
+Thu 27 Mar 2025 07:05:12 INFO  [Debug] Logits (max/min/std): 0.8320 / 0.1660 / 0.0972
+Thu 27 Mar 2025 07:05:12 INFO  [Debug] User emb norm: 90.5000
+Thu 27 Mar 2025 07:05:12 INFO  [Debug] Pos emb norm: 71.0000
+Thu 27 Mar 2025 07:05:12 INFO  [Debug] Cosine similarity (mean/max/min): 0.5586 / 0.7969 / 0.3262
+Thu 27 Mar 2025 07:05:13 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 07:05:13 INFO  [Debug] Pos logits mean: 0.5156
+Thu 27 Mar 2025 07:05:13 INFO  [Debug] Neg logits mean: 0.5391
+Thu 27 Mar 2025 07:05:13 INFO  [Debug] Pos - Neg gap: -0.0234
+Thu 27 Mar 2025 07:05:13 INFO  [Debug] Logits (max/min/std): 0.8203 / 0.1504 / 0.0908
+Thu 27 Mar 2025 07:05:13 INFO  [Debug] User emb norm: 91.0000
+Thu 27 Mar 2025 07:05:13 INFO  [Debug] Pos emb norm: 71.5000
+Thu 27 Mar 2025 07:05:13 INFO  [Debug] Cosine similarity (mean/max/min): 0.5156 / 0.8203 / 0.2559
+Thu 27 Mar 2025 07:05:14 INFO  epoch 0 training [time: 7.86s, train loss: 29.7812]
+Thu 27 Mar 2025 07:05:20 INFO  Text Item num: 96282
+Thu 27 Mar 2025 07:05:20 INFO  Inference item_data with item_batch_size = 80 len(item_loader) = 1204
+Thu 27 Mar 2025 07:05:21 INFO   not in self.env
+Thu 27 Mar 2025 07:18:34 INFO  epoch 0 evaluating [time: 800.02s, valid_score: 0.002320]
+Thu 27 Mar 2025 07:18:34 INFO  valid result: 
+recall@5 : 0.00136    recall@10 : 0.0019    recall@50 : 0.00438    recall@200 : 0.009055    ndcg@5 : 0.0009207    ndcg@10 : 0.0010954    ndcg@50 : 0.0016289    ndcg@200 : 0.0023198
+Thu 27 Mar 2025 07:18:43 INFO  Saving current: ../ckpt/HLLM-0.pth
+Thu 27 Mar 2025 07:18:45 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 07:18:45 INFO  [Debug] Pos logits mean: 0.5625
+Thu 27 Mar 2025 07:18:45 INFO  [Debug] Neg logits mean: 0.5469
+Thu 27 Mar 2025 07:18:45 INFO  [Debug] Pos - Neg gap: 0.0156
+Thu 27 Mar 2025 07:18:45 INFO  [Debug] Logits (max/min/std): 0.8281 / 0.0182 / 0.1055
+Thu 27 Mar 2025 07:18:45 INFO  [Debug] User emb norm: 92.0000
+Thu 27 Mar 2025 07:18:45 INFO  [Debug] Pos emb norm: 71.5000
+Thu 27 Mar 2025 07:18:45 INFO  [Debug] Cosine similarity (mean/max/min): 0.5625 / 0.7969 / 0.3105
+Thu 27 Mar 2025 07:18:46 INFO  lr: 0.0000000 accum_loss: 0.0613 data: 1.467 fwd: 0.612 bwd: 0.480 nce_samples: 89.000 nce_top1_acc: 0.055 nce_top5_acc: 0.123 nce_top10_acc: 0.178 nce_top50_acc: 0.630
+
+Thu 27 Mar 2025 07:18:46 INFO  
+--------------------------------------------------
+Thu 27 Mar 2025 07:18:46 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 07:18:46 INFO  [Debug] Pos logits mean: 0.5391
+Thu 27 Mar 2025 07:18:46 INFO  [Debug] Neg logits mean: 0.5469
+Thu 27 Mar 2025 07:18:46 INFO  [Debug] Pos - Neg gap: -0.0078
+Thu 27 Mar 2025 07:18:46 INFO  [Debug] Logits (max/min/std): 0.8203 / 0.1270 / 0.0933
+Thu 27 Mar 2025 07:18:46 INFO  [Debug] User emb norm: 90.5000
+Thu 27 Mar 2025 07:18:46 INFO  [Debug] Pos emb norm: 71.0000
+Thu 27 Mar 2025 07:18:46 INFO  [Debug] Cosine similarity (mean/max/min): 0.5352 / 0.7422 / 0.3242
+Thu 27 Mar 2025 07:18:47 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 07:18:47 INFO  [Debug] Pos logits mean: 0.5898
+Thu 27 Mar 2025 07:18:47 INFO  [Debug] Neg logits mean: 0.5547
+Thu 27 Mar 2025 07:18:47 INFO  [Debug] Pos - Neg gap: 0.0352
+Thu 27 Mar 2025 07:18:47 INFO  [Debug] Logits (max/min/std): 0.8359 / 0.0388 / 0.1030
+Thu 27 Mar 2025 07:18:47 INFO  [Debug] User emb norm: 91.5000
+Thu 27 Mar 2025 07:18:47 INFO  [Debug] Pos emb norm: 70.0000
+Thu 27 Mar 2025 07:18:47 INFO  [Debug] Cosine similarity (mean/max/min): 0.5898 / 0.8359 / 0.3086
+Thu 27 Mar 2025 07:18:48 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 07:18:48 INFO  [Debug] Pos logits mean: 0.5547
+Thu 27 Mar 2025 07:18:48 INFO  [Debug] Neg logits mean: -48028745941447155563907091045285888.0000
+Thu 27 Mar 2025 07:18:48 INFO  [Debug] Pos - Neg gap: 48028745941447155563907091045285888.0000
+Thu 27 Mar 2025 07:18:48 INFO  [Debug] Logits (max/min/std): 0.8867 / -338953138925153547590470800371487866880.0000 / inf
+Thu 27 Mar 2025 07:18:48 INFO  [Debug] User emb norm: 91.0000
+Thu 27 Mar 2025 07:18:48 INFO  [Debug] Pos emb norm: 71.0000
+Thu 27 Mar 2025 07:18:48 INFO  [Debug] Cosine similarity (mean/max/min): 0.5547 / 0.7266 / 0.2539
+Thu 27 Mar 2025 07:18:49 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 07:18:49 INFO  [Debug] Pos logits mean: 0.5391
+Thu 27 Mar 2025 07:18:49 INFO  [Debug] Neg logits mean: 0.5391
+Thu 27 Mar 2025 07:18:49 INFO  [Debug] Pos - Neg gap: 0.0000
+Thu 27 Mar 2025 07:18:49 INFO  [Debug] Logits (max/min/std): 0.7969 / 0.1924 / 0.0981
+Thu 27 Mar 2025 07:18:49 INFO  [Debug] User emb norm: 91.0000
+Thu 27 Mar 2025 07:18:49 INFO  [Debug] Pos emb norm: 71.5000
+Thu 27 Mar 2025 07:18:49 INFO  [Debug] Cosine similarity (mean/max/min): 0.5391 / 0.7969 / 0.3418
+Thu 27 Mar 2025 07:18:50 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 07:18:50 INFO  [Debug] Pos logits mean: 0.5508
+Thu 27 Mar 2025 07:18:50 INFO  [Debug] Neg logits mean: 0.5547
+Thu 27 Mar 2025 07:18:50 INFO  [Debug] Pos - Neg gap: -0.0039
+Thu 27 Mar 2025 07:18:50 INFO  [Debug] Logits (max/min/std): 0.8477 / 0.1455 / 0.0913
+Thu 27 Mar 2025 07:18:50 INFO  [Debug] User emb norm: 91.0000
+Thu 27 Mar 2025 07:18:50 INFO  [Debug] Pos emb norm: 71.5000
+Thu 27 Mar 2025 07:18:50 INFO  [Debug] Cosine similarity (mean/max/min): 0.5508 / 0.7500 / 0.1738
+Thu 27 Mar 2025 07:18:50 INFO  epoch 1 training [time: 7.19s, train loss: 29.5312]
+Thu 27 Mar 2025 07:18:56 INFO  Text Item num: 96282
+Thu 27 Mar 2025 07:18:56 INFO  Inference item_data with item_batch_size = 80 len(item_loader) = 1204
+Thu 27 Mar 2025 07:18:57 INFO   not in self.env
+Thu 27 Mar 2025 07:32:07 INFO  epoch 1 evaluating [time: 796.81s, valid_score: 0.002320]
+Thu 27 Mar 2025 07:32:07 INFO  valid result: 
+recall@5 : 0.00137    recall@10 : 0.001945    recall@50 : 0.004385    recall@200 : 0.009045    ndcg@5 : 0.0009256    ndcg@10 : 0.001109    ndcg@50 : 0.0016308    ndcg@200 : 0.0023201
+Thu 27 Mar 2025 07:32:20 INFO  Saving current: ../ckpt/HLLM-0.pth
+Thu 27 Mar 2025 07:32:22 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 07:32:22 INFO  [Debug] Pos logits mean: 0.5508
+Thu 27 Mar 2025 07:32:22 INFO  [Debug] Neg logits mean: 0.5469
+Thu 27 Mar 2025 07:32:22 INFO  [Debug] Pos - Neg gap: 0.0039
+Thu 27 Mar 2025 07:32:22 INFO  [Debug] Logits (max/min/std): 0.8164 / 0.0537 / 0.1064
+Thu 27 Mar 2025 07:32:22 INFO  [Debug] User emb norm: 91.0000
+Thu 27 Mar 2025 07:32:22 INFO  [Debug] Pos emb norm: 70.5000
+Thu 27 Mar 2025 07:32:22 INFO  [Debug] Cosine similarity (mean/max/min): 0.5469 / 0.7383 / 0.2891
+Thu 27 Mar 2025 07:32:23 INFO  lr: 0.0000000 accum_loss: 0.0617 data: 1.688 fwd: 0.454 bwd: 0.475 nce_samples: 89.000 nce_top1_acc: 0.015 nce_top5_acc: 0.044 nce_top10_acc: 0.147 nce_top50_acc: 0.515
+
+Thu 27 Mar 2025 07:32:23 INFO  
+--------------------------------------------------
+Thu 27 Mar 2025 07:32:23 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 07:32:23 INFO  [Debug] Pos logits mean: 0.5352
+Thu 27 Mar 2025 07:32:23 INFO  [Debug] Neg logits mean: 0.5469
+Thu 27 Mar 2025 07:32:23 INFO  [Debug] Pos - Neg gap: -0.0117
+Thu 27 Mar 2025 07:32:23 INFO  [Debug] Logits (max/min/std): 0.8594 / 0.0747 / 0.0991
+Thu 27 Mar 2025 07:32:23 INFO  [Debug] User emb norm: 91.5000
+Thu 27 Mar 2025 07:32:23 INFO  [Debug] Pos emb norm: 71.5000
+Thu 27 Mar 2025 07:32:23 INFO  [Debug] Cosine similarity (mean/max/min): 0.5352 / 0.7070 / 0.2988
+Thu 27 Mar 2025 07:32:24 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 07:32:24 INFO  [Debug] Pos logits mean: 0.5586
+Thu 27 Mar 2025 07:32:24 INFO  [Debug] Neg logits mean: 0.5469
+Thu 27 Mar 2025 07:32:24 INFO  [Debug] Pos - Neg gap: 0.0117
+Thu 27 Mar 2025 07:32:24 INFO  [Debug] Logits (max/min/std): 0.8516 / 0.0435 / 0.1089
+Thu 27 Mar 2025 07:32:24 INFO  [Debug] User emb norm: 91.5000
+Thu 27 Mar 2025 07:32:24 INFO  [Debug] Pos emb norm: 71.0000
+Thu 27 Mar 2025 07:32:24 INFO  [Debug] Cosine similarity (mean/max/min): 0.5547 / 0.7344 / 0.2773
+Thu 27 Mar 2025 07:32:25 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 07:32:25 INFO  [Debug] Pos logits mean: 0.5469
+Thu 27 Mar 2025 07:32:25 INFO  [Debug] Neg logits mean: 0.5469
+Thu 27 Mar 2025 07:32:25 INFO  [Debug] Pos - Neg gap: 0.0000
+Thu 27 Mar 2025 07:32:25 INFO  [Debug] Logits (max/min/std): 0.8477 / 0.2275 / 0.0952
+Thu 27 Mar 2025 07:32:25 INFO  [Debug] User emb norm: 91.0000
+Thu 27 Mar 2025 07:32:25 INFO  [Debug] Pos emb norm: 70.5000
+Thu 27 Mar 2025 07:32:25 INFO  [Debug] Cosine similarity (mean/max/min): 0.5469 / 0.7734 / 0.3262
+Thu 27 Mar 2025 07:32:26 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 07:32:26 INFO  [Debug] Pos logits mean: 0.5195
+Thu 27 Mar 2025 07:32:26 INFO  [Debug] Neg logits mean: 0.5273
+Thu 27 Mar 2025 07:32:26 INFO  [Debug] Pos - Neg gap: -0.0078
+Thu 27 Mar 2025 07:32:26 INFO  [Debug] Logits (max/min/std): 0.8438 / 0.1377 / 0.1079
+Thu 27 Mar 2025 07:32:26 INFO  [Debug] User emb norm: 91.5000
+Thu 27 Mar 2025 07:32:26 INFO  [Debug] Pos emb norm: 71.5000
+Thu 27 Mar 2025 07:32:26 INFO  [Debug] Cosine similarity (mean/max/min): 0.5156 / 0.7461 / 0.1846
+Thu 27 Mar 2025 07:32:27 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 07:32:27 INFO  [Debug] Pos logits mean: 0.5664
+Thu 27 Mar 2025 07:32:27 INFO  [Debug] Neg logits mean: 0.5625
+Thu 27 Mar 2025 07:32:27 INFO  [Debug] Pos - Neg gap: 0.0039
+Thu 27 Mar 2025 07:32:27 INFO  [Debug] Logits (max/min/std): 0.7969 / 0.2285 / 0.0859
+Thu 27 Mar 2025 07:32:27 INFO  [Debug] User emb norm: 91.0000
+Thu 27 Mar 2025 07:32:27 INFO  [Debug] Pos emb norm: 71.5000
+Thu 27 Mar 2025 07:32:27 INFO  [Debug] Cosine similarity (mean/max/min): 0.5664 / 0.7500 / 0.3125
+Thu 27 Mar 2025 07:32:27 INFO  epoch 2 training [time: 7.24s, train loss: 30.3750]
+Thu 27 Mar 2025 07:32:34 INFO  Text Item num: 96282
+Thu 27 Mar 2025 07:32:34 INFO  Inference item_data with item_batch_size = 80 len(item_loader) = 1204
+Thu 27 Mar 2025 07:32:34 INFO   not in self.env
