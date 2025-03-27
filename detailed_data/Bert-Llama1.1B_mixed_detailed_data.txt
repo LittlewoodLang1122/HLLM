@@ -1,0 +1,249 @@
+Thu 27 Mar 2025 22:24:38 INFO  HLLM(
+  (item_llm): PeftModelForFeatureExtraction(
+    (base_model): LoraModel(
+      (model): BertModel(
+        (embeddings): BertEmbeddings(
+          (word_embeddings): Embedding(30522, 1024, padding_idx=0)
+          (position_embeddings): Embedding(512, 1024)
+          (token_type_embeddings): Embedding(2, 1024)
+          (LayerNorm): LayerNorm((1024,), eps=1e-12, elementwise_affine=True)
+          (dropout): Dropout(p=0.1, inplace=False)
+        )
+        (encoder): BertEncoder(
+          (layer): ModuleList(
+            (0-23): 24 x BertLayer(
+              (attention): BertAttention(
+                (self): BertSelfAttention(
+                  (query): lora.Linear(
+                    (base_layer): Linear(in_features=1024, out_features=1024, bias=True)
+                    (lora_dropout): ModuleDict(
+                      (default): Identity()
+                    )
+                    (lora_A): ModuleDict(
+                      (default): Linear(in_features=1024, out_features=8, bias=False)
+                    )
+                    (lora_B): ModuleDict(
+                      (default): Linear(in_features=8, out_features=1024, bias=False)
+                    )
+                    (lora_embedding_A): ParameterDict()
+                    (lora_embedding_B): ParameterDict()
+                  )
+                  (key): Linear(in_features=1024, out_features=1024, bias=True)
+                  (value): lora.Linear(
+                    (base_layer): Linear(in_features=1024, out_features=1024, bias=True)
+                    (lora_dropout): ModuleDict(
+                      (default): Identity()
+                    )
+                    (lora_A): ModuleDict(
+                      (default): Linear(in_features=1024, out_features=8, bias=False)
+                    )
+                    (lora_B): ModuleDict(
+                      (default): Linear(in_features=8, out_features=1024, bias=False)
+                    )
+                    (lora_embedding_A): ParameterDict()
+                    (lora_embedding_B): ParameterDict()
+                  )
+                  (dropout): Dropout(p=0.1, inplace=False)
+                )
+                (output): BertSelfOutput(
+                  (dense): Linear(in_features=1024, out_features=1024, bias=True)
+                  (LayerNorm): LayerNorm((1024,), eps=1e-12, elementwise_affine=True)
+                  (dropout): Dropout(p=0.1, inplace=False)
+                )
+              )
+              (intermediate): BertIntermediate(
+                (dense): Linear(in_features=1024, out_features=4096, bias=True)
+                (intermediate_act_fn): GELUActivation()
+              )
+              (output): BertOutput(
+                (dense): Linear(in_features=4096, out_features=1024, bias=True)
+                (LayerNorm): LayerNorm((1024,), eps=1e-12, elementwise_affine=True)
+                (dropout): Dropout(p=0.1, inplace=False)
+              )
+            )
+          )
+        )
+        (pooler): BertPooler(
+          (dense): Linear(in_features=1024, out_features=1024, bias=True)
+          (activation): Tanh()
+        )
+      )
+    )
+  )
+  (user_llm): PeftModelForFeatureExtraction(
+    (base_model): LoraModel(
+      (model): LlamaForCausalLM(
+        (model): LlamaModel(
+          (embed_tokens): Embedding(32000, 2048)
+          (layers): ModuleList(
+            (0-21): 22 x LlamaDecoderLayer(
+              (self_attn): LlamaAttention(
+                (q_proj): lora.Linear(
+                  (base_layer): Linear(in_features=2048, out_features=2048, bias=False)
+                  (lora_dropout): ModuleDict(
+                    (default): Identity()
+                  )
+                  (lora_A): ModuleDict(
+                    (default): Linear(in_features=2048, out_features=8, bias=False)
+                  )
+                  (lora_B): ModuleDict(
+                    (default): Linear(in_features=8, out_features=2048, bias=False)
+                  )
+                  (lora_embedding_A): ParameterDict()
+                  (lora_embedding_B): ParameterDict()
+                )
+                (k_proj): Linear(in_features=2048, out_features=256, bias=False)
+                (v_proj): lora.Linear(
+                  (base_layer): Linear(in_features=2048, out_features=256, bias=False)
+                  (lora_dropout): ModuleDict(
+                    (default): Identity()
+                  )
+                  (lora_A): ModuleDict(
+                    (default): Linear(in_features=2048, out_features=8, bias=False)
+                  )
+                  (lora_B): ModuleDict(
+                    (default): Linear(in_features=8, out_features=256, bias=False)
+                  )
+                  (lora_embedding_A): ParameterDict()
+                  (lora_embedding_B): ParameterDict()
+                )
+                (o_proj): Linear(in_features=2048, out_features=2048, bias=False)
+                (rotary_emb): LlamaRotaryEmbedding()
+              )
+              (mlp): LlamaMLP(
+                (gate_proj): Linear(in_features=2048, out_features=5632, bias=False)
+                (up_proj): Linear(in_features=2048, out_features=5632, bias=False)
+                (down_proj): Linear(in_features=5632, out_features=2048, bias=False)
+                (act_fn): SiLUActivation()
+              )
+              (input_layernorm): LlamaRMSNorm()
+              (post_attention_layernorm): LlamaRMSNorm()
+            )
+          )
+          (norm): LlamaRMSNorm()
+        )
+        (lm_head): Linear(in_features=2048, out_features=32000, bias=False)
+      )
+    )
+  )
+  (item_proj): Linear(in_features=1024, out_features=2048, bias=True)
+)
+Trainable parameters: 4013057.0
+Thu 27 Mar 2025 22:24:38 INFO  Use consine scheduler with 37941.0 warmup 379410 total steps
+Thu 27 Mar 2025 22:24:38 INFO  Use deepspeed strategy
+Thu 27 Mar 2025 22:24:43 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 22:24:43 INFO  [Debug] Pos logits mean: 0.1245
+Thu 27 Mar 2025 22:24:43 INFO  [Debug] Neg logits mean: 0.1216
+Thu 27 Mar 2025 22:24:43 INFO  [Debug] Pos - Neg gap: 0.0029
+Thu 27 Mar 2025 22:24:43 INFO  [Debug] Logits (max/min/std): 0.3379 / 0.0233 / 0.0354
+Thu 27 Mar 2025 22:24:43 INFO  [Debug] User emb norm: 85.5000
+Thu 27 Mar 2025 22:24:43 INFO  [Debug] Pos emb norm: 10.1250
+Thu 27 Mar 2025 22:24:43 INFO  [Debug] Cosine similarity (mean/max/min): 0.1245 / 0.2930 / 0.0693
+Thu 27 Mar 2025 22:24:43 INFO  lr: 0.0000000 accum_loss: 0.0480 data: 1.815 fwd: 0.787 bwd: 0.256 nce_samples: 45.000 nce_top1_acc: 0.027 nce_top5_acc: 0.162 nce_top10_acc: 0.297
+
+Thu 27 Mar 2025 22:24:43 INFO  
+--------------------------------------------------
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Pos logits mean: 0.1260
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Neg logits mean: 0.1187
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Pos - Neg gap: 0.0073
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Logits (max/min/std): 0.2422 / -0.0088 / 0.0371
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] User emb norm: 85.5000
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Pos emb norm: 10.4375
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Cosine similarity (mean/max/min): 0.1260 / 0.1924 / 0.0427
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Pos logits mean: 0.1279
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Neg logits mean: 0.1240
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Pos - Neg gap: 0.0039
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Logits (max/min/std): 0.2656 / 0.0262 / 0.0369
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] User emb norm: 86.0000
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Pos emb norm: 10.3750
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Cosine similarity (mean/max/min): 0.1279 / 0.2324 / 0.0713
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Pos logits mean: 0.1250
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Neg logits mean: 0.1177
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Pos - Neg gap: 0.0073
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Logits (max/min/std): 0.2412 / 0.0284 / 0.0334
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] User emb norm: 85.5000
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Pos emb norm: 10.0000
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Cosine similarity (mean/max/min): 0.1245 / 0.2334 / 0.0554
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Pos logits mean: 0.1069
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Neg logits mean: 0.1128
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Pos - Neg gap: -0.0059
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Logits (max/min/std): 0.3555 / 0.0129 / 0.0361
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] User emb norm: 85.5000
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Pos emb norm: 10.5625
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Cosine similarity (mean/max/min): 0.1064 / 0.1777 / 0.0229
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Pos logits mean: 0.1040
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Neg logits mean: 0.1104
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Pos - Neg gap: -0.0063
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Logits (max/min/std): 0.2305 / 0.0082 / 0.0327
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] User emb norm: 85.5000
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Pos emb norm: 10.3750
+Thu 27 Mar 2025 22:24:44 INFO  [Debug] Cosine similarity (mean/max/min): 0.1040 / 0.1885 / 0.0271
+Thu 27 Mar 2025 22:24:45 INFO  epoch 0 training [time: 4.13s, train loss: 23.1875]
+Thu 27 Mar 2025 22:24:50 INFO  Text Item num: 96282
+Thu 27 Mar 2025 22:24:50 INFO  Inference item_data with item_batch_size = 40 len(item_loader) = 2408
+Thu 27 Mar 2025 22:24:51 INFO   not in self.env
+Thu 27 Mar 2025 22:35:13 INFO  epoch 0 evaluating [time: 628.20s, valid_score: 0.000841]
+Thu 27 Mar 2025 22:35:13 INFO  valid result: 
+recall@5 : 0.000365    recall@10 : 0.000505    recall@50 : 0.00136    recall@200 : 0.003875    ndcg@5 : 0.0002459    ndcg@10 : 0.0002901    ndcg@50 : 0.0004723    ndcg@200 : 0.000841
+Thu 27 Mar 2025 22:35:19 INFO  Saving current: ../ckpt/HLLM-0.pth
+Thu 27 Mar 2025 22:35:20 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 22:35:20 INFO  [Debug] Pos logits mean: 0.1094
+Thu 27 Mar 2025 22:35:20 INFO  [Debug] Neg logits mean: 0.1191
+Thu 27 Mar 2025 22:35:20 INFO  [Debug] Pos - Neg gap: -0.0098
+Thu 27 Mar 2025 22:35:20 INFO  [Debug] Logits (max/min/std): 0.3164 / -0.0071 / 0.0342
+Thu 27 Mar 2025 22:35:20 INFO  [Debug] User emb norm: 85.5000
+Thu 27 Mar 2025 22:35:20 INFO  [Debug] Pos emb norm: 10.1250
+Thu 27 Mar 2025 22:35:20 INFO  [Debug] Cosine similarity (mean/max/min): 0.1094 / 0.2061 / 0.0061
+Thu 27 Mar 2025 22:35:21 INFO  lr: 0.0000000 accum_loss: 0.0498 data: 1.638 fwd: 0.278 bwd: 0.107 nce_samples: 45.000 nce_top1_acc: 0.000 nce_top5_acc: 0.057 nce_top10_acc: 0.114
+
+Thu 27 Mar 2025 22:35:21 INFO  
+--------------------------------------------------
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Pos logits mean: 0.1235
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Neg logits mean: 0.1250
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Pos - Neg gap: -0.0015
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Logits (max/min/std): 0.2383 / 0.0386 / 0.0298
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] User emb norm: 85.5000
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Pos emb norm: 10.5625
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Cosine similarity (mean/max/min): 0.1235 / 0.1855 / 0.0703
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Pos logits mean: 0.1221
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Neg logits mean: 0.1226
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Pos - Neg gap: -0.0005
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Logits (max/min/std): 0.2695 / 0.0113 / 0.0364
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] User emb norm: 85.5000
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Pos emb norm: 10.1875
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Cosine similarity (mean/max/min): 0.1221 / 0.2217 / 0.0327
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Pos logits mean: 0.1147
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Neg logits mean: 0.1162
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Pos - Neg gap: -0.0015
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Logits (max/min/std): 0.2676 / 0.0146 / 0.0405
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] User emb norm: 85.5000
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Pos emb norm: 10.4375
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Cosine similarity (mean/max/min): 0.1147 / 0.2451 / 0.0376
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Pos logits mean: 0.1099
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Neg logits mean: 0.1147
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Pos - Neg gap: -0.0049
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Logits (max/min/std): 0.2617 / 0.0332 / 0.0349
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] User emb norm: 86.0000
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Pos emb norm: 10.4375
+Thu 27 Mar 2025 22:35:21 INFO  [Debug] Cosine similarity (mean/max/min): 0.1099 / 0.1689 / 0.0591
+Thu 27 Mar 2025 22:35:22 INFO  [Debug] Logit scale: 14.2500
+Thu 27 Mar 2025 22:35:22 INFO  [Debug] Pos logits mean: 0.1230
+Thu 27 Mar 2025 22:35:22 INFO  [Debug] Neg logits mean: 0.1226
+Thu 27 Mar 2025 22:35:22 INFO  [Debug] Pos - Neg gap: 0.0005
+Thu 27 Mar 2025 22:35:22 INFO  [Debug] Logits (max/min/std): 0.2314 / 0.0364 / 0.0322
+Thu 27 Mar 2025 22:35:22 INFO  [Debug] User emb norm: 85.5000
+Thu 27 Mar 2025 22:35:22 INFO  [Debug] Pos emb norm: 10.4375
+Thu 27 Mar 2025 22:35:22 INFO  [Debug] Cosine similarity (mean/max/min): 0.1230 / 0.1992 / 0.0527
+Thu 27 Mar 2025 22:35:22 INFO  epoch 1 training [time: 3.45s, train loss: 23.5469]
+Thu 27 Mar 2025 22:35:28 INFO  Text Item num: 96282
+Thu 27 Mar 2025 22:35:28 INFO  Inference item_data with item_batch_size = 40 len(item_loader) = 2408
+Thu 27 Mar 2025 22:35:29 INFO   not in self.env

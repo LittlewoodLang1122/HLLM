@@ -33,19 +33,24 @@ from REC.model.HLLM.modeling_qwen2 import Qwen2ForCausalLM
 def get_lora_config(model, r=8, alpha=16, dropout=0.05):
     model_type = getattr(model.config, "model_type", "").lower()
 
-    # 针对 Qwen/Qwen2 必须手动指定 target_modules
+    # 选择 target_modules
     if model_type in ["qwen", "qwen2"]:
         target_modules = ["q_proj", "k_proj", "v_proj", "o_proj"]
     else:
-        target_modules = None  # PEFT 会自动处理 LLaMA、BERT、GPT 等
+        target_modules = None  # 交给 PEFT 自动推断
+
+    # 自动选择 task_type
+    if model_type in ["bert", "roberta", "albert"]:
+        task_type = TaskType.FEATURE_EXTRACTION
+    else:
+        task_type = TaskType.CAUSAL_LM
 
     return LoraConfig(
         r=r,
         lora_alpha=alpha,
         lora_dropout=dropout,
         bias="none",
-        # task_type=TaskType.CAUSAL_LM,
-        task_type=TaskType.FEATURE_EXTRACTION,
+        task_type=task_type,
         target_modules=target_modules
     )
 

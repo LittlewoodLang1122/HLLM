@@ -1,16 +1,18 @@
 python3 main.py \
 --config_file overall/LLM_deepspeed.yaml HLLM/HLLM.yaml \
---MAX_ITEM_LIST_LENGTH 10 --epochs 5 --optim_args.learning_rate 5e-6 \
+--MAX_ITEM_LIST_LENGTH 10 --epochs 5 --optim_args.learning_rate 1e-5 \
 --checkpoint_dir ../ckpt \
 --loss nce --MAX_TEXT_LENGTH 64 --dataset Pixel200K \
 --text_path /root/HLLM/information \
 --item_pretrain_dir TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T \
 --user_pretrain_dir TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T \
---train_batch_size 4 \
---gradient_accumulation_steps 4 \
+--train_batch_size 8 \
+--gradient_accumulation_steps 2 \
 --precision bf16-mixed \
 --use_LoRA True \
---debug True
+--LoRA_Rank 4 \
+--LoRA_Alpha 8 \
+--debug False
 
 # Qwen is a good model, but it needs some scaling. I have no time.
 # Qwen, useless
