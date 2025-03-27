@@ -176,6 +176,7 @@ class Trainer(object):
     def _train_epoch(self, train_data, epoch_idx, show_progress=False):
         self.model.train()
         total_loss = 0
+        accum_loss = 0
         if self.rank == 0:
             pbar = tqdm(
                 total=len(train_data),
@@ -201,6 +202,7 @@ class Trainer(object):
 
             self._check_nan(losses)
             total_loss += losses.item()
+            accum_loss += losses.item()
 
             # normalize loss to avoid exploding gradients
             losses = losses / self.gradient_accumulation_steps
@@ -215,7 +217,9 @@ class Trainer(object):
             if self.scheduler_config:
                 self.lr_scheduler.step()
             if show_progress and self.rank == 0 and batch_idx % self.update_interval == 0:
-                msg = f"loss: {losses:.4f} data: {data_time-start_time:.3f} fwd: {fwd_time-data_time:.3f} bwd: {bwd_time-fwd_time:.3f}"
+                avg_accum_loss = accum_loss / self.update_interval
+                accum_loss = 0.0
+                msg = f"accum_loss: {avg_accum_loss:.4f} data: {data_time-start_time:.3f} fwd: {fwd_time-data_time:.3f} bwd: {bwd_time-fwd_time:.3f}"
                 if self.scheduler_config:
                     msg = f"lr: {self.lr_scheduler.get_lr()[0]:.7f} " + msg
                 if self.config['loss'] and self.config['loss'] == 'nce':
@@ -227,7 +231,7 @@ class Trainer(object):
                 pbar.update(self.update_interval)
                 self.logger.info(msg + '\n')
                 self.logger.info("\n" + "-"*50)
-            if self.config['debug'] and batch_idx >= 10:
+            if self.config['debug'] and batch_idx >= 5:
                 break
 
         return total_loss
