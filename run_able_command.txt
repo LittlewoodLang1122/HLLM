@@ -6,8 +6,38 @@ python3 main.py \
 --text_path /root/HLLM/information \
 --item_pretrain_dir TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T \
 --user_pretrain_dir TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T \
---train_batch_size 8 \
---gradient_accumulation_steps 2 \
+--train_batch_size 4 \
+--gradient_accumulation_steps 4 \
 --precision bf16-mixed \
 --use_LoRA True \
---debug False
+--debug True
+
+# Qwen, useless
+python3 main.py \
+--config_file overall/LLM_deepspeed.yaml HLLM/HLLM.yaml \
+--MAX_ITEM_LIST_LENGTH 10 --epochs 5 --optim_args.learning_rate 5e-6 \
+--checkpoint_dir ../ckpt \
+--loss nce --MAX_TEXT_LENGTH 64 --dataset Pixel200K \
+--text_path /root/HLLM/information \
+--item_pretrain_dir Qwen/Qwen2.5-0.5B-Instruct \
+--user_pretrain_dir Qwen/Qwen2.5-0.5B-Instruct \
+--train_batch_size 4 \
+--gradient_accumulation_steps 4 \
+--precision bf16-mixed \
+--use_LoRA True \
+--debug True
+
+# Llama-bert-mixed
+python3 main.py \
+--config_file overall/LLM_deepspeed.yaml HLLM/HLLM.yaml \
+--MAX_ITEM_LIST_LENGTH 10 --epochs 5 --optim_args.learning_rate 5e-6 \
+--checkpoint_dir ../ckpt \
+--loss nce --MAX_TEXT_LENGTH 64 --dataset Pixel200K \
+--text_path /root/HLLM/information \
+--item_pretrain_dir google-bert/bert-large-uncased \
+--user_pretrain_dir TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T \
+--train_batch_size 4 \
+--gradient_accumulation_steps 4 \
+--precision bf16-mixed \
+--use_LoRA True \
+--debug True

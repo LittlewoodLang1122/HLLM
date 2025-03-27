@@ -44,7 +44,8 @@ def get_lora_config(model, r=8, alpha=16, dropout=0.05):
         lora_alpha=alpha,
         lora_dropout=dropout,
         bias="none",
-        task_type=TaskType.CAUSAL_LM,
+        # task_type=TaskType.CAUSAL_LM,
+        task_type=TaskType.FEATURE_EXTRACTION,
         target_modules=target_modules
     )
 
@@ -58,6 +59,7 @@ class HLLM(BaseModel):
     def __init__(self, config, dataload):
         super(HLLM, self).__init__()
         self.logger = getLogger()
+        self.debug = config['debug']
 
         self.item_pretrain_dir = config['item_pretrain_dir']
         self.user_pretrain_dir = config['user_pretrain_dir']
@@ -67,10 +69,20 @@ class HLLM(BaseModel):
         self.item_llm = self.create_llm(self.item_pretrain_dir, config['item_llm_init'])
         self.logger.info(f"create user llm")
         self.user_llm = self.create_llm(self.user_pretrain_dir, config['user_llm_init'])
+        user_hidden_dim = self.user_llm.config.hidden_size
+        item_hidden_dim = self.item_llm.config.hidden_size
+
+        if user_hidden_dim != item_hidden_dim:
+            self.logger.info(f"[Init] Creating item projection: {item_hidden_dim} → {user_hidden_dim}")
+            self.item_proj = nn.Linear(item_hidden_dim, user_hidden_dim)
+        else:
+            self.logger.info(f"[Init] No projection needed: user & item hidden_dim both {user_hidden_dim}")
+            self.item_proj = nn.Identity()
+
         self.item_emb_token_n = config['item_emb_token_n']
         if self.item_emb_token_n > 1:
             raise NotImplementedError(f"Not support item_emb_token_n {self.item_emb_token_n} > 1")
-        if config.use_LoRA:
+        if config['use_LoRA']:
             self.item_llm = add_lora_to_llm(self.item_llm, r=config['LoRA_Rank'], alpha=config["LoRA_Alpha"], dropout=config["LoRA_Dropout"])
             self.user_llm = add_lora_to_llm(self.user_llm, r=config['LoRA_Rank'], alpha=config["LoRA_Alpha"], dropout=config["LoRA_Dropout"])
 
@@ -165,7 +177,8 @@ class HLLM(BaseModel):
         with torch.no_grad():
             self.logit_scale.clamp_(0, np.log(100))
         logit_scale = self.logit_scale.exp()
-        self.logger.info(f"[Debug] Logit scale: {logit_scale.item():.4f}")
+        if self.debug:
+            self.logger.info(f"[Debug] Logit scale: {logit_scale.item():.4f}")
 
         D = target_neg.size(-1)
         output_embs = cur_embs / cur_embs.norm(dim=-1, keepdim=True)
@@ -180,13 +193,15 @@ class HLLM(BaseModel):
         fix_logits = torch.matmul(target_pos_embs, neg_embedding_all)
         neg_logits[fix_logits > self.nce_thres] = torch.finfo(neg_logits.dtype).min
 
-        self.logger.info(f"[Debug] Pos logits mean: {pos_logits.mean().item():.4f}")
-        self.logger.info(f"[Debug] Neg logits mean: {neg_logits.mean().item():.4f}")
-        self.logger.info(f"[Debug] Pos - Neg gap: {(pos_logits.mean() - neg_logits.mean()).item():.4f}")
+        if self.debug:
+            self.logger.info(f"[Debug] Pos logits mean: {pos_logits.mean().item():.4f}")
+            self.logger.info(f"[Debug] Neg logits mean: {neg_logits.mean().item():.4f}")
+            self.logger.info(f"[Debug] Pos - Neg gap: {(pos_logits.mean() - neg_logits.mean()).item():.4f}")
 
 
         logits = torch.cat([pos_logits, neg_logits], dim=-1)
-        self.logger.info(f"[Debug] Logits (max/min/std): {logits.max().item():.4f} / {logits.min().item():.4f} / {logits.std().item():.4f}")
+        if self.debug:
+            self.logger.info(f"[Debug] Logits (max/min/std): {logits.max().item():.4f} / {logits.min().item():.4f} / {logits.std().item():.4f}")
 
         logits = logits[user_attention_mask.bool()] * logit_scale
         labels = torch.zeros(logits.size(0), device=logits.device, dtype=torch.int64)
@@ -224,7 +239,8 @@ class HLLM(BaseModel):
             ]
             out = torch.stack(padded_seqs)
             emb = out.sum(dim=1) / cu_input_lens.unsqueeze(1)
-
+        
+        emb = self.item_proj(emb).to(self.user_llm.dtype)
         return emb
 
     def forward(self, interaction, mode='train'):
@@ -240,7 +256,7 @@ class HLLM(BaseModel):
         pos_embedding = self.forward_item_emb(pos_input_ids, pos_position_ids, pos_cu_input_lens, self.item_emb_token_n, self.item_emb_tokens, self.item_llm)
         pos_embedding = pos_embedding.reshape(N, S+1, -1)
         neg_embedding = self.forward_item_emb(neg_input_ids, neg_position_ids, neg_cu_input_lens, self.item_emb_token_n, self.item_emb_tokens, self.item_llm)
-        neg_embedding = neg_embedding.reshape(N, -1, self.item_llm.config.hidden_size)
+        neg_embedding = neg_embedding.reshape(N, -1, neg_embedding.shape[-1])
 
         target_pos_embs = pos_embedding[:, 1:]
         target_neg_embs = neg_embedding
@@ -248,6 +264,8 @@ class HLLM(BaseModel):
         user_embedding = self.user_llm(inputs_embeds=pos_embedding[:, :-1], attention_mask=user_attention_mask).hidden_states[-1]
 
         model_out = {}
+        if self.debug:
+            self.logger.info(f"[Shape Check] user_emb: {user_embedding.shape}, pos_emb: {target_pos_embs.shape}, neg_emb: {target_neg_embs.shape}")
         logits, labels = self.nce_loss(user_embedding, target_pos_embs, target_neg_embs, user_attention_mask)
         model_out['loss'] = F.cross_entropy(logits, labels)
         model_out['nce_samples'] = (logits > torch.finfo(logits.dtype).min/100).sum(dim=1).float().mean()  # samples after filtering same negatives
@@ -257,10 +275,11 @@ class HLLM(BaseModel):
             indices = logits.topk(k, dim=1).indices
             model_out[f"nce_top{k}_acc"] = labels.view(-1, 1).eq(indices).any(dim=1).float().mean()
 
-        self.logger.info(f"[Debug] User emb norm: {user_embedding.norm(dim=-1).mean().item():.4f}")
-        self.logger.info(f"[Debug] Pos emb norm: {target_pos_embs.norm(dim=-1).mean().item():.4f}")
-        cos = F.cosine_similarity(user_embedding, target_pos_embs, dim=-1)
-        self.logger.info(f"[Debug] Cosine similarity (mean/max/min): {cos.mean().item():.4f} / {cos.max().item():.4f} / {cos.min().item():.4f}")
+        if self.debug:
+            self.logger.info(f"[Debug] User emb norm: {user_embedding.norm(dim=-1).mean().item():.4f}")
+            self.logger.info(f"[Debug] Pos emb norm: {target_pos_embs.norm(dim=-1).mean().item():.4f}")
+            cos = F.cosine_similarity(user_embedding, target_pos_embs, dim=-1)
+            self.logger.info(f"[Debug] Cosine similarity (mean/max/min): {cos.mean().item():.4f} / {cos.max().item():.4f} / {cos.min().item():.4f}")
 
         return model_out
 
