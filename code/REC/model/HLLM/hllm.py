@@ -30,14 +30,26 @@ from REC.model.HLLM.modeling_bert import BertModel
 from REC.model.HLLM.baichuan.modeling_baichuan import BaichuanForCausalLM
 from REC.model.HLLM.modeling_qwen2 import Qwen2ForCausalLM
 
-def add_lora_to_llm(llm, r=8, alpha=16, dropout=0.05):
-    peft_config = LoraConfig(
+def get_lora_config(model, r=8, alpha=16, dropout=0.05):
+    model_type = getattr(model.config, "model_type", "").lower()
+
+    # 针对 Qwen/Qwen2 必须手动指定 target_modules
+    if model_type in ["qwen", "qwen2"]:
+        target_modules = ["q_proj", "k_proj", "v_proj", "o_proj"]
+    else:
+        target_modules = None  # PEFT 会自动处理 LLaMA、BERT、GPT 等
+
+    return LoraConfig(
         r=r,
         lora_alpha=alpha,
         lora_dropout=dropout,
         bias="none",
-        task_type=TaskType.CAUSAL_LM  # 如果是BERT可用 TaskType.FEATURE_EXTRACTION
+        task_type=TaskType.CAUSAL_LM,
+        target_modules=target_modules
     )
+
+def add_lora_to_llm(llm, r=8, alpha=16, dropout=0.05):
+    peft_config = get_lora_config(llm, r, alpha, dropout)
     return get_peft_model(llm, peft_config)
 
 class HLLM(BaseModel):
