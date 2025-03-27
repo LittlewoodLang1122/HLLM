@@ -1,3 +1,4 @@
+protobuf==3.20.*
 setuptools==69.5.1
 pandas==2.2.2
 colorama==0.4.6
@@ -13,6 +14,6 @@ PyYAML==6.0.1
 tensorboardX==2.6.2.2
 tensorflow_cpu==2.8.0
 tqdm==4.66.4
-transformers==4.41.1
+transformers==4.49.*
 peft==0.10.0
 flash_attn==2.5.9.post1

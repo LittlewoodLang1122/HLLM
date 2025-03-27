@@ -28,15 +28,28 @@ from REC.model.HLLM.modeling_llama import LlamaForCausalLM
 from REC.model.HLLM.modeling_mistral import MistralForCausalLM
 from REC.model.HLLM.modeling_bert import BertModel
 from REC.model.HLLM.baichuan.modeling_baichuan import BaichuanForCausalLM
+from REC.model.HLLM.modeling_qwen2 import Qwen2ForCausalLM
 
-def add_lora_to_llm(llm, r=8, alpha=16, dropout=0.05):
-    peft_config = LoraConfig(
+def get_lora_config(model, r=8, alpha=16, dropout=0.05):
+    model_type = getattr(model.config, "model_type", "").lower()
+
+    # 针对 Qwen/Qwen2 必须手动指定 target_modules
+    if model_type in ["qwen", "qwen2"]:
+        target_modules = ["q_proj", "k_proj", "v_proj", "o_proj"]
+    else:
+        target_modules = None  # PEFT 会自动处理 LLaMA、BERT、GPT 等
+
+    return LoraConfig(
         r=r,
         lora_alpha=alpha,
         lora_dropout=dropout,
         bias="none",
-        task_type=TaskType.CAUSAL_LM  # 如果是BERT可用 TaskType.FEATURE_EXTRACTION
+        task_type=TaskType.CAUSAL_LM,
+        target_modules=target_modules
     )
+
+def add_lora_to_llm(llm, r=8, alpha=16, dropout=0.05):
+    peft_config = get_lora_config(llm, r, alpha, dropout)
     return get_peft_model(llm, peft_config)
 
 class HLLM(BaseModel):
@@ -88,6 +101,11 @@ class HLLM(BaseModel):
             self.logger.info(f"{msg.missing_keys = }")
             self.logger.info(f"{msg.unexpected_keys = }")
 
+        trainable_params = [n for n, p in self.user_llm.named_parameters() if p.requires_grad]
+        self.logger.info(f"[Debug] Trainable user_llm parameters: {len(trainable_params)}")
+        for name in trainable_params[:10]:  # 只打前10个，避免爆炸
+            self.logger.info(f"[Debug] - {name}")
+
     def create_llm(self, pretrain_dir, init=True):
         self.logger.info(f"******* create LLM {pretrain_dir} *******")
         hf_config = AutoConfig.from_pretrained(pretrain_dir, trust_remote_code=True)
@@ -122,6 +140,14 @@ class HLLM(BaseModel):
                 return BertModel.from_pretrained(pretrain_dir, config=hf_config)
             else:
                 return BertModel(config=hf_config).cuda()
+        elif isinstance(hf_config, transformers.Qwen2Config):
+            hf_config.use_ft_flash_attn = self.use_ft_flash_attn
+            self.logger.info(f'Using flash attention {hf_config.use_ft_flash_attn} for qwen2')
+            self.logger.info(f'Init {init} for qwen2')
+            if init:
+                return Qwen2ForCausalLM.from_pretrained(pretrain_dir, config=hf_config)
+            else:
+                return Qwen2ForCausalLM(config=hf_config).cuda()
         elif getattr(hf_config, "model_type", None) == "baichuan":
             hf_config.use_ft_flash_attn = self.use_ft_flash_attn
             self.logger.info(f'Using flash attention {hf_config.use_ft_flash_attn} for baichuan')
@@ -139,6 +165,8 @@ class HLLM(BaseModel):
         with torch.no_grad():
             self.logit_scale.clamp_(0, np.log(100))
         logit_scale = self.logit_scale.exp()
+        self.logger.info(f"[Debug] Logit scale: {logit_scale.item():.4f}")
+
         D = target_neg.size(-1)
         output_embs = cur_embs / cur_embs.norm(dim=-1, keepdim=True)
         target_pos_embs = target_pos / target_pos.norm(dim=-1, keepdim=True)
@@ -152,7 +180,14 @@ class HLLM(BaseModel):
         fix_logits = torch.matmul(target_pos_embs, neg_embedding_all)
         neg_logits[fix_logits > self.nce_thres] = torch.finfo(neg_logits.dtype).min
 
+        self.logger.info(f"[Debug] Pos logits mean: {pos_logits.mean().item():.4f}")
+        self.logger.info(f"[Debug] Neg logits mean: {neg_logits.mean().item():.4f}")
+        self.logger.info(f"[Debug] Pos - Neg gap: {(pos_logits.mean() - neg_logits.mean()).item():.4f}")
+
+
         logits = torch.cat([pos_logits, neg_logits], dim=-1)
+        self.logger.info(f"[Debug] Logits (max/min/std): {logits.max().item():.4f} / {logits.min().item():.4f} / {logits.std().item():.4f}")
+
         logits = logits[user_attention_mask.bool()] * logit_scale
         labels = torch.zeros(logits.size(0), device=logits.device, dtype=torch.int64)
         return logits, labels
@@ -221,6 +256,12 @@ class HLLM(BaseModel):
                 break
             indices = logits.topk(k, dim=1).indices
             model_out[f"nce_top{k}_acc"] = labels.view(-1, 1).eq(indices).any(dim=1).float().mean()
+
+        self.logger.info(f"[Debug] User emb norm: {user_embedding.norm(dim=-1).mean().item():.4f}")
+        self.logger.info(f"[Debug] Pos emb norm: {target_pos_embs.norm(dim=-1).mean().item():.4f}")
+        cos = F.cosine_similarity(user_embedding, target_pos_embs, dim=-1)
+        self.logger.info(f"[Debug] Cosine similarity (mean/max/min): {cos.mean().item():.4f} / {cos.max().item():.4f} / {cos.min().item():.4f}")
+
         return model_out
 
     @torch.no_grad()

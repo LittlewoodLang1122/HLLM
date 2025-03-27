@@ -101,6 +101,8 @@ class Config(object):
         self.final_config_dict.setdefault('LoRA_Alpha', 16)
         self.final_config_dict.setdefault('LoRA_Dropout', 0)
 
+        self.final_config_dict.setdefault('gradient_accumulation_steps', 1)
+
         if hasattr(self.model_class, 'input_type'):
             self.final_config_dict['MODEL_INPUT_TYPE'] = self.model_class.input_type
 
