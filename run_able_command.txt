@@ -6,12 +6,12 @@ python3 main.py \
 --text_path /root/HLLM/information \
 --item_pretrain_dir TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T \
 --user_pretrain_dir TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T \
---train_batch_size 8 \
---gradient_accumulation_steps 2 \
+--train_batch_size 4 \
+--gradient_accumulation_steps 4 \
 --precision bf16-mixed \
 --use_LoRA True \
---LoRA_Rank 4 \
---LoRA_Alpha 8 \
+--LoRA_Rank 8 \
+--LoRA_Alpha 16 \
 --debug False
 
 # Qwen is a good model, but it needs some scaling. I have no time.
@@ -22,10 +22,10 @@ python3 main.py \
 --checkpoint_dir ../ckpt \
 --loss nce --MAX_TEXT_LENGTH 64 --dataset Pixel200K \
 --text_path /root/HLLM/information \
---item_pretrain_dir Qwen/Qwen2.5-0.5B-Instruct \
---user_pretrain_dir Qwen/Qwen2.5-0.5B-Instruct \
---train_batch_size 4 \
---gradient_accumulation_steps 4 \
+--item_pretrain_dir Qwen/Qwen2.5-1.5B-Instruct \
+--user_pretrain_dir TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T \
+--train_batch_size 2 \
+--gradient_accumulation_steps 8 \
 --precision bf16-mixed \
 --use_LoRA True \
 --debug True
