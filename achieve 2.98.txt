@@ -1,0 +1,1189 @@
+Sat 29 Mar 2025 09:41:51 INFO  
+General Hyper Parameters:
+seed = 2020
+state = INFO
+use_text = True
+reproducibility = True
+checkpoint_dir = ../ckpt
+show_progress = True
+log_wandb = False
+data_path = ../dataset/
+strategy = deepspeed
+precision = bf16-mixed
+model = HLLM
+
+Training Hyper Parameters:
+epochs = 3
+train_batch_size = 4
+optim_args = {'learning_rate': 5e-05, 'weight_decay': 0.01}
+eval_step = 1
+stopping_step = 5
+
+Evaluation Hyper Parameters:
+eval_batch_size = 256
+topk = [5, 10, 50, 200]
+metrics = ['Recall', 'NDCG']
+valid_metric = NDCG@200
+metric_decimal_place = 7
+eval_type = EvaluatorType.RANKING
+valid_metric_bigger = True
+
+Dataset Hyper Parameters:
+MAX_ITEM_LIST_LENGTH = 10
+MAX_TEXT_LENGTH = 64
+text_keys = ['title', 'tag', 'description']
+item_prompt = Compress the following sentence into embedding: 
+
+LoRA Hyper Parameters:
+use_LoRA = True
+LoRA_Rank = 16
+LoRA_Alpha = 32
+LoRA_Dropout = 0
+
+Other Hyper Parameters: 
+wandb_project = REC
+text_path = /root/HLLM/information/Pixel200K.csv
+item_emb_token_n = 1
+loss = nce
+scheduler_args = {'type': 'cosine', 'warmup': 0.05}
+stage = 2
+item_pretrain_dir = TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T
+item_llm_init = True
+user_pretrain_dir = TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T
+user_llm_init = True
+use_ft_flash_attn = True
+gradient_accumulation_steps = 4
+use_tained_model = True
+MODEL_INPUT_TYPE = InputType.SEQ
+device = cuda:0
+use_trained_model = True
+debug = False
+
+
+Sat 29 Mar 2025 09:41:51 INFO  Pixel200K
+The number of users: 200001
+Average actions of users: 19.82828
+The number of items: 96283
+Average actions of items: 41.187927130720176
+The number of inters: 3965656
+The sparsity of the dataset: 99.9794063532928%
+Sat 29 Mar 2025 09:41:51 INFO  HLLM(
+  (item_llm): LlamaForCausalLM(
+    (model): LlamaModel(
+      (embed_tokens): Embedding(32000, 2048)
+      (layers): ModuleList(
+        (0-21): 22 x LlamaDecoderLayer(
+          (self_attn): LlamaAttention(
+            (q_proj): Linear(in_features=2048, out_features=2048, bias=False)
+            (k_proj): Linear(in_features=2048, out_features=256, bias=False)
+            (v_proj): Linear(in_features=2048, out_features=256, bias=False)
+            (o_proj): Linear(in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): LlamaRotaryEmbedding()
+          )
+          (mlp): LlamaMLP(
+            (gate_proj): Linear(in_features=2048, out_features=5632, bias=False)
+            (up_proj): Linear(in_features=2048, out_features=5632, bias=False)
+            (down_proj): Linear(in_features=5632, out_features=2048, bias=False)
+            (act_fn): SiLUActivation()
+          )
+          (input_layernorm): LlamaRMSNorm()
+          (post_attention_layernorm): LlamaRMSNorm()
+        )
+      )
+      (norm): LlamaRMSNorm()
+    )
+    (lm_head): Linear(in_features=2048, out_features=32000, bias=False)
+  )
+  (user_llm): PeftModelForCausalLM(
+    (base_model): LoraModel(
+      (model): LlamaForCausalLM(
+        (model): LlamaModel(
+          (embed_tokens): Embedding(32000, 2048)
+          (layers): ModuleList(
+            (0-21): 22 x LlamaDecoderLayer(
+              (self_attn): LlamaAttention(
+                (q_proj): lora.Linear(
+                  (base_layer): Linear(in_features=2048, out_features=2048, bias=False)
+                  (lora_dropout): ModuleDict(
+                    (default): Identity()
+                  )
+                  (lora_A): ModuleDict(
+                    (default): Linear(in_features=2048, out_features=16, bias=False)
+                  )
+                  (lora_B): ModuleDict(
+                    (default): Linear(in_features=16, out_features=2048, bias=False)
+                  )
+                  (lora_embedding_A): ParameterDict()
+                  (lora_embedding_B): ParameterDict()
+                )
+                (k_proj): Linear(in_features=2048, out_features=256, bias=False)
+                (v_proj): lora.Linear(
+                  (base_layer): Linear(in_features=2048, out_features=256, bias=False)
+                  (lora_dropout): ModuleDict(
+                    (default): Identity()
+                  )
+                  (lora_A): ModuleDict(
+                    (default): Linear(in_features=2048, out_features=16, bias=False)
+                  )
+                  (lora_B): ModuleDict(
+                    (default): Linear(in_features=16, out_features=256, bias=False)
+                  )
+                  (lora_embedding_A): ParameterDict()
+                  (lora_embedding_B): ParameterDict()
+                )
+                (o_proj): Linear(in_features=2048, out_features=2048, bias=False)
+                (rotary_emb): LlamaRotaryEmbedding()
+              )
+              (mlp): LlamaMLP(
+                (gate_proj): Linear(in_features=2048, out_features=5632, bias=False)
+                (up_proj): Linear(in_features=2048, out_features=5632, bias=False)
+                (down_proj): Linear(in_features=5632, out_features=2048, bias=False)
+                (act_fn): SiLUActivation()
+              )
+              (input_layernorm): LlamaRMSNorm()
+              (post_attention_layernorm): LlamaRMSNorm()
+            )
+          )
+          (norm): LlamaRMSNorm()
+        )
+        (lm_head): Linear(in_features=2048, out_features=32000, bias=False)
+      )
+    )
+  )
+  (item_proj): Identity()
+)
+Trainable parameters: 2254849.0
+Sat 29 Mar 2025 09:41:51 INFO  Use consine scheduler with 5691.150000000001 warmup 113823 total steps
+Sat 29 Mar 2025 09:41:51 INFO  Use deepspeed strategy
+Sat 29 Mar 2025 09:41:59 INFO  lr: 0.0000000 accum_loss: 0.0504 data: 2.657 fwd: 0.868 bwd: 0.253 nce_samples: 89.000 nce_top1_acc: 0.324 nce_top5_acc: 0.432 nce_top10_acc: 0.649 nce_top50_acc: 0.892
+
+Sat 29 Mar 2025 09:41:59 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:42:28 INFO  lr: 0.0000002 accum_loss: 4.2301 data: 0.001 fwd: 0.173 bwd: 0.179 nce_samples: 88.974 nce_top1_acc: 0.079 nce_top5_acc: 0.263 nce_top10_acc: 0.395 nce_top50_acc: 0.842
+
+Sat 29 Mar 2025 09:42:28 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:42:56 INFO  lr: 0.0000004 accum_loss: 4.2377 data: 0.002 fwd: 0.171 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.143 nce_top5_acc: 0.257 nce_top10_acc: 0.400 nce_top50_acc: 0.943
+
+Sat 29 Mar 2025 09:42:56 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:43:25 INFO  lr: 0.0000005 accum_loss: 4.2254 data: 0.001 fwd: 0.172 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.103 nce_top5_acc: 0.231 nce_top10_acc: 0.359 nce_top50_acc: 0.923
+
+Sat 29 Mar 2025 09:43:25 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:43:54 INFO  lr: 0.0000007 accum_loss: 4.2406 data: 0.001 fwd: 0.170 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.176 nce_top5_acc: 0.382 nce_top10_acc: 0.412 nce_top50_acc: 0.882
+
+Sat 29 Mar 2025 09:43:54 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:44:22 INFO  lr: 0.0000009 accum_loss: 4.2152 data: 0.001 fwd: 0.170 bwd: 0.181 nce_samples: 88.966 nce_top1_acc: 0.034 nce_top5_acc: 0.310 nce_top10_acc: 0.448 nce_top50_acc: 0.897
+
+Sat 29 Mar 2025 09:44:22 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:44:51 INFO  lr: 0.0000011 accum_loss: 4.2250 data: 0.001 fwd: 0.170 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.150 nce_top5_acc: 0.400 nce_top10_acc: 0.475 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 09:44:51 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:45:19 INFO  lr: 0.0000012 accum_loss: 4.2113 data: 0.001 fwd: 0.171 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.059 nce_top5_acc: 0.206 nce_top10_acc: 0.412 nce_top50_acc: 0.765
+
+Sat 29 Mar 2025 09:45:19 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:45:48 INFO  lr: 0.0000014 accum_loss: 4.2236 data: 0.001 fwd: 0.170 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.278 nce_top5_acc: 0.472 nce_top10_acc: 0.556 nce_top50_acc: 0.944
+
+Sat 29 Mar 2025 09:45:48 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:46:16 INFO  lr: 0.0000016 accum_loss: 4.2039 data: 0.001 fwd: 0.176 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.158 nce_top5_acc: 0.263 nce_top10_acc: 0.368 nce_top50_acc: 0.816
+
+Sat 29 Mar 2025 09:46:16 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:46:45 INFO  lr: 0.0000018 accum_loss: 4.2109 data: 0.001 fwd: 0.173 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.125 nce_top5_acc: 0.225 nce_top10_acc: 0.350 nce_top50_acc: 0.825
+
+Sat 29 Mar 2025 09:46:45 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:47:13 INFO  lr: 0.0000019 accum_loss: 4.2041 data: 0.001 fwd: 0.172 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.385 nce_top5_acc: 0.538 nce_top10_acc: 0.590 nce_top50_acc: 0.821
+
+Sat 29 Mar 2025 09:47:13 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:47:41 INFO  lr: 0.0000021 accum_loss: 4.2090 data: 0.001 fwd: 0.171 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.150 nce_top5_acc: 0.225 nce_top10_acc: 0.350 nce_top50_acc: 0.925
+
+Sat 29 Mar 2025 09:47:41 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:48:10 INFO  lr: 0.0000023 accum_loss: 4.2018 data: 0.001 fwd: 0.171 bwd: 0.180 nce_samples: 88.946 nce_top1_acc: 0.270 nce_top5_acc: 0.486 nce_top10_acc: 0.541 nce_top50_acc: 0.892
+
+Sat 29 Mar 2025 09:48:10 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:48:38 INFO  lr: 0.0000025 accum_loss: 4.2098 data: 0.001 fwd: 0.177 bwd: 0.188 nce_samples: 89.000 nce_top1_acc: 0.094 nce_top5_acc: 0.281 nce_top10_acc: 0.438 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 09:48:38 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:49:07 INFO  lr: 0.0000026 accum_loss: 4.1953 data: 0.001 fwd: 0.173 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.387 nce_top5_acc: 0.484 nce_top10_acc: 0.484 nce_top50_acc: 0.903
+
+Sat 29 Mar 2025 09:49:07 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:49:35 INFO  lr: 0.0000028 accum_loss: 4.2053 data: 0.001 fwd: 0.175 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.222 nce_top5_acc: 0.417 nce_top10_acc: 0.500 nce_top50_acc: 0.778
+
+Sat 29 Mar 2025 09:49:35 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:50:04 INFO  lr: 0.0000030 accum_loss: 4.2016 data: 0.001 fwd: 0.175 bwd: 0.188 nce_samples: 89.000 nce_top1_acc: 0.139 nce_top5_acc: 0.222 nce_top10_acc: 0.417 nce_top50_acc: 0.750
+
+Sat 29 Mar 2025 09:50:04 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:50:32 INFO  lr: 0.0000032 accum_loss: 4.1863 data: 0.001 fwd: 0.173 bwd: 0.179 nce_samples: 88.974 nce_top1_acc: 0.237 nce_top5_acc: 0.316 nce_top10_acc: 0.421 nce_top50_acc: 0.947
+
+Sat 29 Mar 2025 09:50:32 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:51:01 INFO  lr: 0.0000033 accum_loss: 4.1859 data: 0.001 fwd: 0.171 bwd: 0.179 nce_samples: 88.947 nce_top1_acc: 0.211 nce_top5_acc: 0.368 nce_top10_acc: 0.447 nce_top50_acc: 0.947
+
+Sat 29 Mar 2025 09:51:01 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:51:30 INFO  lr: 0.0000035 accum_loss: 4.1658 data: 0.002 fwd: 0.175 bwd: 0.184 nce_samples: 89.000 nce_top1_acc: 0.000 nce_top5_acc: 0.216 nce_top10_acc: 0.324 nce_top50_acc: 0.811
+
+Sat 29 Mar 2025 09:51:30 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:51:58 INFO  lr: 0.0000037 accum_loss: 4.1984 data: 0.001 fwd: 0.172 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.250 nce_top5_acc: 0.500 nce_top10_acc: 0.550 nce_top50_acc: 0.925
+
+Sat 29 Mar 2025 09:51:58 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:52:27 INFO  lr: 0.0000039 accum_loss: 4.1666 data: 0.001 fwd: 0.172 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.257 nce_top5_acc: 0.429 nce_top10_acc: 0.543 nce_top50_acc: 0.943
+
+Sat 29 Mar 2025 09:52:27 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:52:55 INFO  lr: 0.0000040 accum_loss: 4.1770 data: 0.001 fwd: 0.173 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.129 nce_top5_acc: 0.258 nce_top10_acc: 0.355 nce_top50_acc: 0.839
+
+Sat 29 Mar 2025 09:52:55 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:53:23 INFO  lr: 0.0000042 accum_loss: 4.1668 data: 0.001 fwd: 0.175 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.250 nce_top5_acc: 0.450 nce_top10_acc: 0.525 nce_top50_acc: 0.875
+
+Sat 29 Mar 2025 09:53:23 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:53:52 INFO  lr: 0.0000044 accum_loss: 4.1582 data: 0.001 fwd: 0.175 bwd: 0.187 nce_samples: 89.000 nce_top1_acc: 0.184 nce_top5_acc: 0.395 nce_top10_acc: 0.500 nce_top50_acc: 0.895
+
+Sat 29 Mar 2025 09:53:52 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:54:20 INFO  lr: 0.0000046 accum_loss: 4.1676 data: 0.001 fwd: 0.174 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.225 nce_top5_acc: 0.325 nce_top10_acc: 0.450 nce_top50_acc: 0.800
+
+Sat 29 Mar 2025 09:54:20 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:54:49 INFO  lr: 0.0000047 accum_loss: 4.1324 data: 0.001 fwd: 0.174 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.162 nce_top5_acc: 0.324 nce_top10_acc: 0.378 nce_top50_acc: 0.838
+
+Sat 29 Mar 2025 09:54:49 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:55:17 INFO  lr: 0.0000049 accum_loss: 4.1324 data: 0.001 fwd: 0.172 bwd: 0.176 nce_samples: 89.000 nce_top1_acc: 0.275 nce_top5_acc: 0.600 nce_top10_acc: 0.675 nce_top50_acc: 0.925
+
+Sat 29 Mar 2025 09:55:17 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:55:46 INFO  lr: 0.0000051 accum_loss: 4.1344 data: 0.001 fwd: 0.177 bwd: 0.184 nce_samples: 89.000 nce_top1_acc: 0.200 nce_top5_acc: 0.514 nce_top10_acc: 0.629 nce_top50_acc: 0.914
+
+Sat 29 Mar 2025 09:55:46 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:56:14 INFO  lr: 0.0000053 accum_loss: 4.1418 data: 0.001 fwd: 0.176 bwd: 0.188 nce_samples: 89.000 nce_top1_acc: 0.114 nce_top5_acc: 0.371 nce_top10_acc: 0.571 nce_top50_acc: 0.914
+
+Sat 29 Mar 2025 09:56:14 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:56:42 INFO  lr: 0.0000054 accum_loss: 4.1289 data: 0.002 fwd: 0.177 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.143 nce_top5_acc: 0.257 nce_top10_acc: 0.429 nce_top50_acc: 0.857
+
+Sat 29 Mar 2025 09:56:42 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:57:11 INFO  lr: 0.0000056 accum_loss: 4.1141 data: 0.001 fwd: 0.174 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.200 nce_top5_acc: 0.343 nce_top10_acc: 0.371 nce_top50_acc: 0.886
+
+Sat 29 Mar 2025 09:57:11 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:57:39 INFO  lr: 0.0000058 accum_loss: 4.1188 data: 0.001 fwd: 0.172 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.225 nce_top5_acc: 0.400 nce_top10_acc: 0.525 nce_top50_acc: 0.925
+
+Sat 29 Mar 2025 09:57:39 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:58:08 INFO  lr: 0.0000060 accum_loss: 4.0939 data: 0.001 fwd: 0.171 bwd: 0.186 nce_samples: 89.000 nce_top1_acc: 0.147 nce_top5_acc: 0.353 nce_top10_acc: 0.382 nce_top50_acc: 0.853
+
+Sat 29 Mar 2025 09:58:08 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:58:36 INFO  lr: 0.0000061 accum_loss: 4.0879 data: 0.001 fwd: 0.173 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.297 nce_top5_acc: 0.514 nce_top10_acc: 0.622 nce_top50_acc: 0.892
+
+Sat 29 Mar 2025 09:58:36 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:59:05 INFO  lr: 0.0000063 accum_loss: 4.0752 data: 0.001 fwd: 0.174 bwd: 0.181 nce_samples: 88.974 nce_top1_acc: 0.205 nce_top5_acc: 0.513 nce_top10_acc: 0.692 nce_top50_acc: 0.974
+
+Sat 29 Mar 2025 09:59:05 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 09:59:33 INFO  lr: 0.0000065 accum_loss: 4.0887 data: 0.001 fwd: 0.172 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.225 nce_top5_acc: 0.500 nce_top10_acc: 0.575 nce_top50_acc: 0.950
+
+Sat 29 Mar 2025 09:59:33 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:00:02 INFO  lr: 0.0000067 accum_loss: 4.0572 data: 0.002 fwd: 0.171 bwd: 0.183 nce_samples: 89.000 nce_top1_acc: 0.400 nce_top5_acc: 0.600 nce_top10_acc: 0.657 nce_top50_acc: 0.914
+
+Sat 29 Mar 2025 10:00:02 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:00:30 INFO  lr: 0.0000069 accum_loss: 4.0574 data: 0.001 fwd: 0.175 bwd: 0.187 nce_samples: 89.000 nce_top1_acc: 0.342 nce_top5_acc: 0.553 nce_top10_acc: 0.658 nce_top50_acc: 0.974
+
+Sat 29 Mar 2025 10:00:30 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:00:59 INFO  lr: 0.0000070 accum_loss: 4.0480 data: 0.001 fwd: 0.175 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.184 nce_top5_acc: 0.447 nce_top10_acc: 0.605 nce_top50_acc: 0.947
+
+Sat 29 Mar 2025 10:00:59 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:01:27 INFO  lr: 0.0000072 accum_loss: 4.0383 data: 0.001 fwd: 0.176 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.200 nce_top5_acc: 0.475 nce_top10_acc: 0.625 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:01:27 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:01:56 INFO  lr: 0.0000074 accum_loss: 4.0316 data: 0.002 fwd: 0.172 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.091 nce_top5_acc: 0.394 nce_top10_acc: 0.606 nce_top50_acc: 0.939
+
+Sat 29 Mar 2025 10:01:56 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:02:24 INFO  lr: 0.0000076 accum_loss: 4.0184 data: 0.001 fwd: 0.171 bwd: 0.179 nce_samples: 88.974 nce_top1_acc: 0.333 nce_top5_acc: 0.487 nce_top10_acc: 0.641 nce_top50_acc: 0.974
+
+Sat 29 Mar 2025 10:02:24 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:02:52 INFO  lr: 0.0000077 accum_loss: 3.9838 data: 0.001 fwd: 0.173 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.182 nce_top5_acc: 0.455 nce_top10_acc: 0.576 nce_top50_acc: 0.970
+
+Sat 29 Mar 2025 10:02:52 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:03:21 INFO  lr: 0.0000079 accum_loss: 3.9891 data: 0.001 fwd: 0.168 bwd: 0.176 nce_samples: 89.000 nce_top1_acc: 0.175 nce_top5_acc: 0.325 nce_top10_acc: 0.450 nce_top50_acc: 0.800
+
+Sat 29 Mar 2025 10:03:21 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:03:49 INFO  lr: 0.0000081 accum_loss: 3.9635 data: 0.001 fwd: 0.172 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.172 nce_top5_acc: 0.448 nce_top10_acc: 0.621 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:03:49 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:04:18 INFO  lr: 0.0000083 accum_loss: 3.9535 data: 0.002 fwd: 0.171 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.250 nce_top5_acc: 0.425 nce_top10_acc: 0.525 nce_top50_acc: 0.850
+
+Sat 29 Mar 2025 10:04:18 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:04:46 INFO  lr: 0.0000084 accum_loss: 3.9584 data: 0.001 fwd: 0.179 bwd: 0.183 nce_samples: 89.000 nce_top1_acc: 0.171 nce_top5_acc: 0.343 nce_top10_acc: 0.514 nce_top50_acc: 0.971
+
+Sat 29 Mar 2025 10:04:46 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:05:15 INFO  lr: 0.0000086 accum_loss: 3.9412 data: 0.001 fwd: 0.174 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.353 nce_top5_acc: 0.647 nce_top10_acc: 0.853 nce_top50_acc: 0.971
+
+Sat 29 Mar 2025 10:05:15 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:05:43 INFO  lr: 0.0000088 accum_loss: 3.9289 data: 0.001 fwd: 0.170 bwd: 0.185 nce_samples: 89.000 nce_top1_acc: 0.282 nce_top5_acc: 0.487 nce_top10_acc: 0.692 nce_top50_acc: 0.923
+
+Sat 29 Mar 2025 10:05:43 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:06:11 INFO  lr: 0.0000090 accum_loss: 3.9051 data: 0.001 fwd: 0.168 bwd: 0.176 nce_samples: 89.000 nce_top1_acc: 0.306 nce_top5_acc: 0.556 nce_top10_acc: 0.639 nce_top50_acc: 0.889
+
+Sat 29 Mar 2025 10:06:11 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:06:40 INFO  lr: 0.0000091 accum_loss: 3.8820 data: 0.001 fwd: 0.170 bwd: 0.172 nce_samples: 89.000 nce_top1_acc: 0.350 nce_top5_acc: 0.575 nce_top10_acc: 0.625 nce_top50_acc: 0.925
+
+Sat 29 Mar 2025 10:06:40 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:07:08 INFO  lr: 0.0000093 accum_loss: 3.8637 data: 0.001 fwd: 0.170 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.474 nce_top5_acc: 0.658 nce_top10_acc: 0.763 nce_top50_acc: 0.947
+
+Sat 29 Mar 2025 10:07:08 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:07:37 INFO  lr: 0.0000095 accum_loss: 3.8406 data: 0.001 fwd: 0.172 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.275 nce_top5_acc: 0.450 nce_top10_acc: 0.550 nce_top50_acc: 0.950
+
+Sat 29 Mar 2025 10:07:37 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:08:05 INFO  lr: 0.0000097 accum_loss: 3.8248 data: 0.001 fwd: 0.172 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.459 nce_top5_acc: 0.622 nce_top10_acc: 0.811 nce_top50_acc: 0.946
+
+Sat 29 Mar 2025 10:08:05 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:08:33 INFO  lr: 0.0000098 accum_loss: 3.8293 data: 0.001 fwd: 0.170 bwd: 0.175 nce_samples: 89.000 nce_top1_acc: 0.345 nce_top5_acc: 0.655 nce_top10_acc: 0.759 nce_top50_acc: 0.966
+
+Sat 29 Mar 2025 10:08:33 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:09:02 INFO  lr: 0.0000100 accum_loss: 3.7854 data: 0.001 fwd: 0.172 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.350 nce_top5_acc: 0.525 nce_top10_acc: 0.675 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 10:09:02 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:09:30 INFO  lr: 0.0000102 accum_loss: 3.8006 data: 0.001 fwd: 0.172 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.325 nce_top5_acc: 0.575 nce_top10_acc: 0.700 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 10:09:30 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:09:59 INFO  lr: 0.0000104 accum_loss: 3.7643 data: 0.001 fwd: 0.169 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.211 nce_top5_acc: 0.395 nce_top10_acc: 0.579 nce_top50_acc: 0.921
+
+Sat 29 Mar 2025 10:09:59 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:10:27 INFO  lr: 0.0000105 accum_loss: 3.7506 data: 0.001 fwd: 0.171 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.103 nce_top5_acc: 0.385 nce_top10_acc: 0.538 nce_top50_acc: 0.949
+
+Sat 29 Mar 2025 10:10:27 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:10:56 INFO  lr: 0.0000107 accum_loss: 3.7113 data: 0.001 fwd: 0.177 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.143 nce_top5_acc: 0.514 nce_top10_acc: 0.743 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:10:56 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:11:24 INFO  lr: 0.0000109 accum_loss: 3.7170 data: 0.001 fwd: 0.173 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.150 nce_top5_acc: 0.500 nce_top10_acc: 0.575 nce_top50_acc: 0.925
+
+Sat 29 Mar 2025 10:11:24 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:11:53 INFO  lr: 0.0000111 accum_loss: 3.7008 data: 0.001 fwd: 0.173 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.152 nce_top5_acc: 0.545 nce_top10_acc: 0.697 nce_top50_acc: 0.970
+
+Sat 29 Mar 2025 10:11:53 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:12:21 INFO  lr: 0.0000112 accum_loss: 3.6859 data: 0.001 fwd: 0.178 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.469 nce_top5_acc: 0.656 nce_top10_acc: 0.844 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:12:21 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:12:50 INFO  lr: 0.0000114 accum_loss: 3.6588 data: 0.001 fwd: 0.169 bwd: 0.176 nce_samples: 89.000 nce_top1_acc: 0.256 nce_top5_acc: 0.692 nce_top10_acc: 0.769 nce_top50_acc: 0.974
+
+Sat 29 Mar 2025 10:12:50 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:13:18 INFO  lr: 0.0000116 accum_loss: 3.6496 data: 0.001 fwd: 0.172 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.282 nce_top5_acc: 0.667 nce_top10_acc: 0.718 nce_top50_acc: 0.974
+
+Sat 29 Mar 2025 10:13:18 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:13:46 INFO  lr: 0.0000118 accum_loss: 3.6420 data: 0.001 fwd: 0.176 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.156 nce_top5_acc: 0.500 nce_top10_acc: 0.688 nce_top50_acc: 0.938
+
+Sat 29 Mar 2025 10:13:46 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:14:15 INFO  lr: 0.0000119 accum_loss: 3.6385 data: 0.001 fwd: 0.171 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.300 nce_top5_acc: 0.600 nce_top10_acc: 0.700 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:14:15 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:14:44 INFO  lr: 0.0000121 accum_loss: 3.5760 data: 0.001 fwd: 0.170 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.294 nce_top5_acc: 0.500 nce_top10_acc: 0.647 nce_top50_acc: 0.941
+
+Sat 29 Mar 2025 10:14:44 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:15:12 INFO  lr: 0.0000123 accum_loss: 3.6121 data: 0.001 fwd: 0.179 bwd: 0.185 nce_samples: 89.000 nce_top1_acc: 0.250 nce_top5_acc: 0.550 nce_top10_acc: 0.675 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 10:15:12 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:15:41 INFO  lr: 0.0000125 accum_loss: 3.6365 data: 0.001 fwd: 0.171 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.350 nce_top5_acc: 0.600 nce_top10_acc: 0.675 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:15:41 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:16:09 INFO  lr: 0.0000127 accum_loss: 3.5654 data: 0.001 fwd: 0.176 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.389 nce_top5_acc: 0.583 nce_top10_acc: 0.639 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:16:09 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:16:37 INFO  lr: 0.0000128 accum_loss: 3.5371 data: 0.001 fwd: 0.169 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.250 nce_top5_acc: 0.575 nce_top10_acc: 0.775 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 10:16:37 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:17:06 INFO  lr: 0.0000130 accum_loss: 3.5168 data: 0.001 fwd: 0.169 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.270 nce_top5_acc: 0.568 nce_top10_acc: 0.757 nce_top50_acc: 0.946
+
+Sat 29 Mar 2025 10:17:06 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:17:34 INFO  lr: 0.0000132 accum_loss: 3.5293 data: 0.002 fwd: 0.170 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.475 nce_top5_acc: 0.750 nce_top10_acc: 0.800 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:17:34 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:18:03 INFO  lr: 0.0000134 accum_loss: 3.5365 data: 0.001 fwd: 0.174 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.162 nce_top5_acc: 0.405 nce_top10_acc: 0.595 nce_top50_acc: 0.838
+
+Sat 29 Mar 2025 10:18:03 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:18:31 INFO  lr: 0.0000135 accum_loss: 3.5348 data: 0.001 fwd: 0.169 bwd: 0.175 nce_samples: 89.000 nce_top1_acc: 0.375 nce_top5_acc: 0.650 nce_top10_acc: 0.800 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 10:18:31 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:18:59 INFO  lr: 0.0000137 accum_loss: 3.5141 data: 0.001 fwd: 0.174 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.158 nce_top5_acc: 0.421 nce_top10_acc: 0.605 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:18:59 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:19:28 INFO  lr: 0.0000139 accum_loss: 3.5148 data: 0.001 fwd: 0.173 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.350 nce_top5_acc: 0.475 nce_top10_acc: 0.625 nce_top50_acc: 0.900
+
+Sat 29 Mar 2025 10:19:28 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:19:56 INFO  lr: 0.0000141 accum_loss: 3.4959 data: 0.001 fwd: 0.174 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.371 nce_top5_acc: 0.543 nce_top10_acc: 0.657 nce_top50_acc: 0.914
+
+Sat 29 Mar 2025 10:19:56 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:20:25 INFO  lr: 0.0000142 accum_loss: 3.4969 data: 0.001 fwd: 0.174 bwd: 0.186 nce_samples: 89.000 nce_top1_acc: 0.214 nce_top5_acc: 0.607 nce_top10_acc: 0.714 nce_top50_acc: 0.964
+
+Sat 29 Mar 2025 10:20:25 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:20:53 INFO  lr: 0.0000144 accum_loss: 3.4725 data: 0.001 fwd: 0.179 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.379 nce_top5_acc: 0.690 nce_top10_acc: 0.828 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:20:53 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:21:21 INFO  lr: 0.0000146 accum_loss: 3.4791 data: 0.001 fwd: 0.177 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.286 nce_top5_acc: 0.486 nce_top10_acc: 0.743 nce_top50_acc: 0.971
+
+Sat 29 Mar 2025 10:21:21 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:21:50 INFO  lr: 0.0000148 accum_loss: 3.4846 data: 0.001 fwd: 0.169 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.270 nce_top5_acc: 0.649 nce_top10_acc: 0.757 nce_top50_acc: 0.946
+
+Sat 29 Mar 2025 10:21:50 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:22:18 INFO  lr: 0.0000149 accum_loss: 3.4752 data: 0.001 fwd: 0.171 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.350 nce_top5_acc: 0.525 nce_top10_acc: 0.650 nce_top50_acc: 0.950
+
+Sat 29 Mar 2025 10:22:18 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:22:47 INFO  lr: 0.0000151 accum_loss: 3.4383 data: 0.001 fwd: 0.172 bwd: 0.178 nce_samples: 88.968 nce_top1_acc: 0.226 nce_top5_acc: 0.484 nce_top10_acc: 0.613 nce_top50_acc: 0.968
+
+Sat 29 Mar 2025 10:22:47 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:23:15 INFO  lr: 0.0000153 accum_loss: 3.4391 data: 0.001 fwd: 0.173 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.703 nce_top5_acc: 0.892 nce_top10_acc: 0.946 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:23:15 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:23:44 INFO  lr: 0.0000155 accum_loss: 3.3889 data: 0.001 fwd: 0.167 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.212 nce_top5_acc: 0.545 nce_top10_acc: 0.636 nce_top50_acc: 0.939
+
+Sat 29 Mar 2025 10:23:44 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:24:12 INFO  lr: 0.0000156 accum_loss: 3.4059 data: 0.001 fwd: 0.170 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.282 nce_top5_acc: 0.462 nce_top10_acc: 0.615 nce_top50_acc: 0.949
+
+Sat 29 Mar 2025 10:24:12 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:24:40 INFO  lr: 0.0000158 accum_loss: 3.4473 data: 0.001 fwd: 0.175 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.205 nce_top5_acc: 0.436 nce_top10_acc: 0.615 nce_top50_acc: 0.974
+
+Sat 29 Mar 2025 10:24:40 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:25:09 INFO  lr: 0.0000160 accum_loss: 3.3887 data: 0.001 fwd: 0.171 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.158 nce_top5_acc: 0.447 nce_top10_acc: 0.474 nce_top50_acc: 0.921
+
+Sat 29 Mar 2025 10:25:09 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:25:37 INFO  lr: 0.0000162 accum_loss: 3.4207 data: 0.001 fwd: 0.176 bwd: 0.186 nce_samples: 89.000 nce_top1_acc: 0.324 nce_top5_acc: 0.647 nce_top10_acc: 0.794 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:25:37 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:26:06 INFO  lr: 0.0000163 accum_loss: 3.4051 data: 0.001 fwd: 0.171 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.351 nce_top5_acc: 0.784 nce_top10_acc: 0.865 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:26:06 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:26:35 INFO  lr: 0.0000165 accum_loss: 3.4287 data: 0.002 fwd: 0.170 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.263 nce_top5_acc: 0.553 nce_top10_acc: 0.658 nce_top50_acc: 0.947
+
+Sat 29 Mar 2025 10:26:35 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:27:03 INFO  lr: 0.0000167 accum_loss: 3.4168 data: 0.001 fwd: 0.171 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.308 nce_top5_acc: 0.513 nce_top10_acc: 0.641 nce_top50_acc: 0.923
+
+Sat 29 Mar 2025 10:27:03 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:27:31 INFO  lr: 0.0000169 accum_loss: 3.3979 data: 0.001 fwd: 0.172 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.237 nce_top5_acc: 0.737 nce_top10_acc: 0.816 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:27:31 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:28:00 INFO  lr: 0.0000170 accum_loss: 3.3779 data: 0.001 fwd: 0.177 bwd: 0.188 nce_samples: 89.000 nce_top1_acc: 0.280 nce_top5_acc: 0.560 nce_top10_acc: 0.720 nce_top50_acc: 0.960
+
+Sat 29 Mar 2025 10:28:00 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:28:28 INFO  lr: 0.0000172 accum_loss: 3.3471 data: 0.001 fwd: 0.175 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.400 nce_top5_acc: 0.633 nce_top10_acc: 0.800 nce_top50_acc: 0.967
+
+Sat 29 Mar 2025 10:28:28 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:28:56 INFO  lr: 0.0000174 accum_loss: 3.3668 data: 0.001 fwd: 0.170 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.364 nce_top5_acc: 0.636 nce_top10_acc: 0.788 nce_top50_acc: 0.939
+
+Sat 29 Mar 2025 10:28:56 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:29:25 INFO  lr: 0.0000176 accum_loss: 3.3725 data: 0.001 fwd: 0.171 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.306 nce_top5_acc: 0.556 nce_top10_acc: 0.694 nce_top50_acc: 0.944
+
+Sat 29 Mar 2025 10:29:25 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:29:53 INFO  lr: 0.0000177 accum_loss: 3.2881 data: 0.001 fwd: 0.176 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.282 nce_top5_acc: 0.615 nce_top10_acc: 0.744 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:29:53 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:30:21 INFO  lr: 0.0000179 accum_loss: 3.3412 data: 0.002 fwd: 0.171 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.206 nce_top5_acc: 0.441 nce_top10_acc: 0.588 nce_top50_acc: 0.971
+
+Sat 29 Mar 2025 10:30:21 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:30:50 INFO  lr: 0.0000181 accum_loss: 3.3387 data: 0.001 fwd: 0.170 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.368 nce_top5_acc: 0.684 nce_top10_acc: 0.763 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:30:50 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:31:19 INFO  lr: 0.0000183 accum_loss: 3.3195 data: 0.001 fwd: 0.169 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.324 nce_top5_acc: 0.647 nce_top10_acc: 0.794 nce_top50_acc: 0.971
+
+Sat 29 Mar 2025 10:31:19 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:31:47 INFO  lr: 0.0000184 accum_loss: 3.3436 data: 0.002 fwd: 0.172 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.400 nce_top5_acc: 0.714 nce_top10_acc: 0.800 nce_top50_acc: 0.914
+
+Sat 29 Mar 2025 10:31:47 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:32:15 INFO  lr: 0.0000186 accum_loss: 3.3590 data: 0.001 fwd: 0.171 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.525 nce_top5_acc: 0.750 nce_top10_acc: 0.850 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:32:15 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:32:44 INFO  lr: 0.0000188 accum_loss: 3.3148 data: 0.001 fwd: 0.174 bwd: 0.184 nce_samples: 89.000 nce_top1_acc: 0.100 nce_top5_acc: 0.600 nce_top10_acc: 0.650 nce_top50_acc: 0.950
+
+Sat 29 Mar 2025 10:32:44 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:33:12 INFO  lr: 0.0000190 accum_loss: 3.3041 data: 0.001 fwd: 0.172 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.405 nce_top5_acc: 0.676 nce_top10_acc: 0.757 nce_top50_acc: 0.973
+
+Sat 29 Mar 2025 10:33:12 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:33:40 INFO  lr: 0.0000192 accum_loss: 3.3154 data: 0.002 fwd: 0.176 bwd: 0.187 nce_samples: 89.000 nce_top1_acc: 0.211 nce_top5_acc: 0.421 nce_top10_acc: 0.526 nce_top50_acc: 0.947
+
+Sat 29 Mar 2025 10:33:40 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:34:09 INFO  lr: 0.0000193 accum_loss: 3.2975 data: 0.001 fwd: 0.175 bwd: 0.184 nce_samples: 89.000 nce_top1_acc: 0.400 nce_top5_acc: 0.725 nce_top10_acc: 0.750 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 10:34:09 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:34:37 INFO  lr: 0.0000195 accum_loss: 3.2807 data: 0.002 fwd: 0.173 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.325 nce_top5_acc: 0.625 nce_top10_acc: 0.750 nce_top50_acc: 0.900
+
+Sat 29 Mar 2025 10:34:37 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:35:06 INFO  lr: 0.0000197 accum_loss: 3.2961 data: 0.001 fwd: 0.174 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.297 nce_top5_acc: 0.459 nce_top10_acc: 0.676 nce_top50_acc: 0.919
+
+Sat 29 Mar 2025 10:35:06 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:35:34 INFO  lr: 0.0000199 accum_loss: 3.3078 data: 0.001 fwd: 0.170 bwd: 0.178 nce_samples: 88.972 nce_top1_acc: 0.361 nce_top5_acc: 0.611 nce_top10_acc: 0.750 nce_top50_acc: 0.972
+
+Sat 29 Mar 2025 10:35:34 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:36:03 INFO  lr: 0.0000200 accum_loss: 3.2875 data: 0.001 fwd: 0.173 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.436 nce_top5_acc: 0.872 nce_top10_acc: 0.923 nce_top50_acc: 0.974
+
+Sat 29 Mar 2025 10:36:03 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:36:31 INFO  lr: 0.0000202 accum_loss: 3.3193 data: 0.001 fwd: 0.175 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.300 nce_top5_acc: 0.700 nce_top10_acc: 0.750 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 10:36:31 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:36:59 INFO  lr: 0.0000204 accum_loss: 3.2965 data: 0.001 fwd: 0.170 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.324 nce_top5_acc: 0.618 nce_top10_acc: 0.794 nce_top50_acc: 0.971
+
+Sat 29 Mar 2025 10:36:59 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:37:28 INFO  lr: 0.0000206 accum_loss: 3.2877 data: 0.001 fwd: 0.176 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.250 nce_top5_acc: 0.694 nce_top10_acc: 0.778 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:37:28 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:37:56 INFO  lr: 0.0000207 accum_loss: 3.2756 data: 0.001 fwd: 0.172 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.400 nce_top5_acc: 0.571 nce_top10_acc: 0.686 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:37:56 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:38:24 INFO  lr: 0.0000209 accum_loss: 3.3010 data: 0.001 fwd: 0.179 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.350 nce_top5_acc: 0.600 nce_top10_acc: 0.750 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:38:24 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:38:53 INFO  lr: 0.0000211 accum_loss: 3.3055 data: 0.001 fwd: 0.173 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.400 nce_top5_acc: 0.600 nce_top10_acc: 0.825 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:38:53 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:39:22 INFO  lr: 0.0000213 accum_loss: 3.2641 data: 0.001 fwd: 0.170 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.350 nce_top5_acc: 0.575 nce_top10_acc: 0.750 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 10:39:22 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:39:50 INFO  lr: 0.0000214 accum_loss: 3.2775 data: 0.001 fwd: 0.172 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.375 nce_top5_acc: 0.675 nce_top10_acc: 0.900 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:39:50 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:40:18 INFO  lr: 0.0000216 accum_loss: 3.2963 data: 0.001 fwd: 0.170 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.455 nce_top5_acc: 0.636 nce_top10_acc: 0.818 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:40:18 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:40:47 INFO  lr: 0.0000218 accum_loss: 3.2752 data: 0.001 fwd: 0.171 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.371 nce_top5_acc: 0.686 nce_top10_acc: 0.800 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:40:47 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:41:15 INFO  lr: 0.0000220 accum_loss: 3.2820 data: 0.001 fwd: 0.174 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.675 nce_top5_acc: 0.775 nce_top10_acc: 0.900 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:41:15 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:41:43 INFO  lr: 0.0000221 accum_loss: 3.3021 data: 0.001 fwd: 0.169 bwd: 0.175 nce_samples: 89.000 nce_top1_acc: 0.350 nce_top5_acc: 0.625 nce_top10_acc: 0.800 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:41:43 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:42:12 INFO  lr: 0.0000223 accum_loss: 3.2670 data: 0.001 fwd: 0.172 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.371 nce_top5_acc: 0.686 nce_top10_acc: 0.829 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:42:12 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:42:40 INFO  lr: 0.0000225 accum_loss: 3.2863 data: 0.001 fwd: 0.173 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.525 nce_top5_acc: 0.650 nce_top10_acc: 0.700 nce_top50_acc: 0.925
+
+Sat 29 Mar 2025 10:42:40 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:43:09 INFO  lr: 0.0000227 accum_loss: 3.2633 data: 0.001 fwd: 0.170 bwd: 0.176 nce_samples: 89.000 nce_top1_acc: 0.300 nce_top5_acc: 0.550 nce_top10_acc: 0.650 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:43:09 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:43:37 INFO  lr: 0.0000228 accum_loss: 3.2727 data: 0.001 fwd: 0.177 bwd: 0.183 nce_samples: 89.000 nce_top1_acc: 0.462 nce_top5_acc: 0.769 nce_top10_acc: 0.846 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:43:37 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:44:05 INFO  lr: 0.0000230 accum_loss: 3.2799 data: 0.001 fwd: 0.169 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.250 nce_top5_acc: 0.556 nce_top10_acc: 0.611 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:44:05 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:44:33 INFO  lr: 0.0000232 accum_loss: 3.2246 data: 0.001 fwd: 0.177 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.275 nce_top5_acc: 0.575 nce_top10_acc: 0.725 nce_top50_acc: 0.925
+
+Sat 29 Mar 2025 10:44:33 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:45:02 INFO  lr: 0.0000234 accum_loss: 3.2459 data: 0.001 fwd: 0.175 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.300 nce_top5_acc: 0.525 nce_top10_acc: 0.650 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:45:02 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:45:30 INFO  lr: 0.0000235 accum_loss: 3.1828 data: 0.001 fwd: 0.171 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.351 nce_top5_acc: 0.757 nce_top10_acc: 0.865 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:45:30 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:45:58 INFO  lr: 0.0000237 accum_loss: 3.2455 data: 0.001 fwd: 0.174 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.175 nce_top5_acc: 0.525 nce_top10_acc: 0.700 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:45:58 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:46:27 INFO  lr: 0.0000239 accum_loss: 3.2563 data: 0.001 fwd: 0.174 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.324 nce_top5_acc: 0.757 nce_top10_acc: 0.865 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:46:27 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:46:55 INFO  lr: 0.0000241 accum_loss: 3.2604 data: 0.001 fwd: 0.170 bwd: 0.175 nce_samples: 89.000 nce_top1_acc: 0.375 nce_top5_acc: 0.600 nce_top10_acc: 0.800 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:46:55 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:47:23 INFO  lr: 0.0000242 accum_loss: 3.2410 data: 0.001 fwd: 0.175 bwd: 0.183 nce_samples: 89.000 nce_top1_acc: 0.412 nce_top5_acc: 0.676 nce_top10_acc: 0.735 nce_top50_acc: 0.971
+
+Sat 29 Mar 2025 10:47:23 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:47:52 INFO  lr: 0.0000244 accum_loss: 3.1836 data: 0.001 fwd: 0.174 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.276 nce_top5_acc: 0.655 nce_top10_acc: 0.793 nce_top50_acc: 0.966
+
+Sat 29 Mar 2025 10:47:52 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:48:20 INFO  lr: 0.0000246 accum_loss: 3.2617 data: 0.001 fwd: 0.170 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.410 nce_top5_acc: 0.641 nce_top10_acc: 0.769 nce_top50_acc: 0.949
+
+Sat 29 Mar 2025 10:48:20 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:48:49 INFO  lr: 0.0000248 accum_loss: 3.2242 data: 0.001 fwd: 0.176 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.225 nce_top5_acc: 0.525 nce_top10_acc: 0.725 nce_top50_acc: 0.950
+
+Sat 29 Mar 2025 10:48:49 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:49:17 INFO  lr: 0.0000250 accum_loss: 3.2494 data: 0.002 fwd: 0.174 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.375 nce_top5_acc: 0.700 nce_top10_acc: 0.825 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 10:49:17 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:49:45 INFO  lr: 0.0000251 accum_loss: 3.1881 data: 0.001 fwd: 0.171 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.425 nce_top5_acc: 0.650 nce_top10_acc: 0.800 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:49:45 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:50:14 INFO  lr: 0.0000253 accum_loss: 3.2322 data: 0.002 fwd: 0.172 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.275 nce_top5_acc: 0.650 nce_top10_acc: 0.750 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 10:50:14 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:50:42 INFO  lr: 0.0000255 accum_loss: 3.1895 data: 0.001 fwd: 0.169 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.543 nce_top5_acc: 0.800 nce_top10_acc: 0.886 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:50:42 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:51:11 INFO  lr: 0.0000257 accum_loss: 3.1891 data: 0.001 fwd: 0.172 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.500 nce_top5_acc: 0.675 nce_top10_acc: 0.750 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 10:51:11 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:51:39 INFO  lr: 0.0000258 accum_loss: 3.2035 data: 0.001 fwd: 0.169 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.450 nce_top5_acc: 0.775 nce_top10_acc: 0.875 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:51:39 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:52:07 INFO  lr: 0.0000260 accum_loss: 3.1898 data: 0.001 fwd: 0.170 bwd: 0.175 nce_samples: 89.000 nce_top1_acc: 0.450 nce_top5_acc: 0.700 nce_top10_acc: 0.775 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:52:07 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:52:35 INFO  lr: 0.0000262 accum_loss: 3.2042 data: 0.001 fwd: 0.171 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.333 nce_top5_acc: 0.744 nce_top10_acc: 0.821 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:52:35 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:53:04 INFO  lr: 0.0000264 accum_loss: 3.2494 data: 0.001 fwd: 0.171 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.286 nce_top5_acc: 0.571 nce_top10_acc: 0.743 nce_top50_acc: 0.971
+
+Sat 29 Mar 2025 10:53:04 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:53:32 INFO  lr: 0.0000265 accum_loss: 3.2322 data: 0.001 fwd: 0.169 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.441 nce_top5_acc: 0.706 nce_top10_acc: 0.794 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:53:32 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:54:00 INFO  lr: 0.0000267 accum_loss: 3.2102 data: 0.001 fwd: 0.175 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.324 nce_top5_acc: 0.676 nce_top10_acc: 0.865 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:54:00 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:54:29 INFO  lr: 0.0000269 accum_loss: 3.2098 data: 0.001 fwd: 0.169 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.278 nce_top5_acc: 0.556 nce_top10_acc: 0.667 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:54:29 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:54:57 INFO  lr: 0.0000271 accum_loss: 3.2365 data: 0.001 fwd: 0.175 bwd: 0.187 nce_samples: 89.000 nce_top1_acc: 0.275 nce_top5_acc: 0.375 nce_top10_acc: 0.575 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:54:57 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:55:25 INFO  lr: 0.0000272 accum_loss: 3.2150 data: 0.001 fwd: 0.172 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.387 nce_top5_acc: 0.581 nce_top10_acc: 0.710 nce_top50_acc: 0.968
+
+Sat 29 Mar 2025 10:55:25 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:55:54 INFO  lr: 0.0000274 accum_loss: 3.2287 data: 0.001 fwd: 0.174 bwd: 0.187 nce_samples: 89.000 nce_top1_acc: 0.410 nce_top5_acc: 0.692 nce_top10_acc: 0.821 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:55:54 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:56:23 INFO  lr: 0.0000276 accum_loss: 3.1770 data: 0.001 fwd: 0.179 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.091 nce_top5_acc: 0.424 nce_top10_acc: 0.515 nce_top50_acc: 0.970
+
+Sat 29 Mar 2025 10:56:23 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:56:51 INFO  lr: 0.0000278 accum_loss: 3.2324 data: 0.001 fwd: 0.171 bwd: 0.176 nce_samples: 89.000 nce_top1_acc: 0.350 nce_top5_acc: 0.700 nce_top10_acc: 0.825 nce_top50_acc: 0.950
+
+Sat 29 Mar 2025 10:56:51 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:57:19 INFO  lr: 0.0000279 accum_loss: 3.2066 data: 0.001 fwd: 0.175 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.368 nce_top5_acc: 0.632 nce_top10_acc: 0.763 nce_top50_acc: 0.974
+
+Sat 29 Mar 2025 10:57:19 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:57:48 INFO  lr: 0.0000281 accum_loss: 3.2289 data: 0.001 fwd: 0.173 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.324 nce_top5_acc: 0.595 nce_top10_acc: 0.703 nce_top50_acc: 0.973
+
+Sat 29 Mar 2025 10:57:48 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:58:16 INFO  lr: 0.0000283 accum_loss: 3.2248 data: 0.001 fwd: 0.173 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.410 nce_top5_acc: 0.641 nce_top10_acc: 0.718 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:58:16 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:58:45 INFO  lr: 0.0000285 accum_loss: 3.2066 data: 0.001 fwd: 0.172 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.212 nce_top5_acc: 0.424 nce_top10_acc: 0.636 nce_top50_acc: 0.970
+
+Sat 29 Mar 2025 10:58:45 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:59:13 INFO  lr: 0.0000286 accum_loss: 3.1193 data: 0.001 fwd: 0.176 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.333 nce_top5_acc: 0.615 nce_top10_acc: 0.692 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:59:13 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 10:59:42 INFO  lr: 0.0000288 accum_loss: 3.1920 data: 0.001 fwd: 0.171 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.385 nce_top5_acc: 0.667 nce_top10_acc: 0.795 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 10:59:42 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:00:10 INFO  lr: 0.0000290 accum_loss: 3.1760 data: 0.002 fwd: 0.172 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.200 nce_top5_acc: 0.629 nce_top10_acc: 0.714 nce_top50_acc: 0.971
+
+Sat 29 Mar 2025 11:00:10 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:00:38 INFO  lr: 0.0000292 accum_loss: 3.1416 data: 0.001 fwd: 0.171 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.333 nce_top5_acc: 0.567 nce_top10_acc: 0.700 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:00:38 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:01:07 INFO  lr: 0.0000293 accum_loss: 3.2143 data: 0.001 fwd: 0.172 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.250 nce_top5_acc: 0.556 nce_top10_acc: 0.694 nce_top50_acc: 0.972
+
+Sat 29 Mar 2025 11:01:07 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:01:35 INFO  lr: 0.0000295 accum_loss: 3.1359 data: 0.001 fwd: 0.173 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.400 nce_top5_acc: 0.629 nce_top10_acc: 0.714 nce_top50_acc: 0.971
+
+Sat 29 Mar 2025 11:01:35 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:02:03 INFO  lr: 0.0000297 accum_loss: 3.1904 data: 0.001 fwd: 0.172 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.312 nce_top5_acc: 0.625 nce_top10_acc: 0.812 nce_top50_acc: 0.969
+
+Sat 29 Mar 2025 11:02:03 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:02:32 INFO  lr: 0.0000299 accum_loss: 3.1904 data: 0.001 fwd: 0.172 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.471 nce_top5_acc: 0.676 nce_top10_acc: 0.824 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:02:32 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:03:00 INFO  lr: 0.0000300 accum_loss: 3.1389 data: 0.001 fwd: 0.172 bwd: 0.175 nce_samples: 89.000 nce_top1_acc: 0.265 nce_top5_acc: 0.529 nce_top10_acc: 0.676 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:03:00 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:03:28 INFO  lr: 0.0000302 accum_loss: 3.2164 data: 0.001 fwd: 0.170 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.541 nce_top5_acc: 0.784 nce_top10_acc: 0.892 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:03:28 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:03:57 INFO  lr: 0.0000304 accum_loss: 3.1656 data: 0.001 fwd: 0.171 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.361 nce_top5_acc: 0.722 nce_top10_acc: 0.806 nce_top50_acc: 0.972
+
+Sat 29 Mar 2025 11:03:57 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:04:25 INFO  lr: 0.0000306 accum_loss: 3.1437 data: 0.001 fwd: 0.170 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.450 nce_top5_acc: 0.675 nce_top10_acc: 0.750 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 11:04:25 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:04:54 INFO  lr: 0.0000307 accum_loss: 3.1771 data: 0.001 fwd: 0.172 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.225 nce_top5_acc: 0.550 nce_top10_acc: 0.650 nce_top50_acc: 0.925
+
+Sat 29 Mar 2025 11:04:54 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:05:22 INFO  lr: 0.0000309 accum_loss: 3.1250 data: 0.001 fwd: 0.172 bwd: 0.176 nce_samples: 89.000 nce_top1_acc: 0.389 nce_top5_acc: 0.667 nce_top10_acc: 0.778 nce_top50_acc: 0.972
+
+Sat 29 Mar 2025 11:05:22 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:05:50 INFO  lr: 0.0000311 accum_loss: 3.1576 data: 0.001 fwd: 0.171 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.450 nce_top5_acc: 0.800 nce_top10_acc: 0.850 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:05:50 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:06:19 INFO  lr: 0.0000313 accum_loss: 3.2158 data: 0.001 fwd: 0.171 bwd: 0.176 nce_samples: 89.000 nce_top1_acc: 0.333 nce_top5_acc: 0.636 nce_top10_acc: 0.758 nce_top50_acc: 0.970
+
+Sat 29 Mar 2025 11:06:19 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:06:47 INFO  lr: 0.0000315 accum_loss: 3.1910 data: 0.001 fwd: 0.172 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.568 nce_top5_acc: 0.784 nce_top10_acc: 0.838 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:06:47 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:07:16 INFO  lr: 0.0000316 accum_loss: 3.2072 data: 0.001 fwd: 0.173 bwd: 0.183 nce_samples: 89.000 nce_top1_acc: 0.270 nce_top5_acc: 0.568 nce_top10_acc: 0.757 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:07:16 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:07:44 INFO  lr: 0.0000318 accum_loss: 3.1684 data: 0.001 fwd: 0.172 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.278 nce_top5_acc: 0.528 nce_top10_acc: 0.722 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:07:44 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:08:12 INFO  lr: 0.0000320 accum_loss: 3.1633 data: 0.001 fwd: 0.170 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.324 nce_top5_acc: 0.703 nce_top10_acc: 0.730 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:08:12 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:08:41 INFO  lr: 0.0000322 accum_loss: 3.1949 data: 0.002 fwd: 0.171 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.425 nce_top5_acc: 0.700 nce_top10_acc: 0.825 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 11:08:41 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:09:09 INFO  lr: 0.0000323 accum_loss: 3.1477 data: 0.001 fwd: 0.174 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.276 nce_top5_acc: 0.655 nce_top10_acc: 0.724 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:09:09 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:09:37 INFO  lr: 0.0000325 accum_loss: 3.1697 data: 0.001 fwd: 0.172 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.368 nce_top5_acc: 0.684 nce_top10_acc: 0.895 nce_top50_acc: 0.974
+
+Sat 29 Mar 2025 11:09:37 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:10:06 INFO  lr: 0.0000327 accum_loss: 3.1854 data: 0.001 fwd: 0.178 bwd: 0.190 nce_samples: 89.000 nce_top1_acc: 0.368 nce_top5_acc: 0.658 nce_top10_acc: 0.842 nce_top50_acc: 0.947
+
+Sat 29 Mar 2025 11:10:06 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:10:34 INFO  lr: 0.0000329 accum_loss: 3.1688 data: 0.001 fwd: 0.170 bwd: 0.175 nce_samples: 89.000 nce_top1_acc: 0.600 nce_top5_acc: 0.850 nce_top10_acc: 0.925 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 11:10:34 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:11:02 INFO  lr: 0.0000330 accum_loss: 3.1750 data: 0.001 fwd: 0.172 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.206 nce_top5_acc: 0.559 nce_top10_acc: 0.706 nce_top50_acc: 0.941
+
+Sat 29 Mar 2025 11:11:02 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:11:31 INFO  lr: 0.0000332 accum_loss: 3.1010 data: 0.001 fwd: 0.175 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.375 nce_top5_acc: 0.700 nce_top10_acc: 0.750 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 11:11:31 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:12:00 INFO  lr: 0.0000334 accum_loss: 3.1625 data: 0.001 fwd: 0.176 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.175 nce_top5_acc: 0.600 nce_top10_acc: 0.750 nce_top50_acc: 0.950
+
+Sat 29 Mar 2025 11:12:00 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:12:28 INFO  lr: 0.0000336 accum_loss: 3.1725 data: 0.001 fwd: 0.175 bwd: 0.183 nce_samples: 89.000 nce_top1_acc: 0.425 nce_top5_acc: 0.700 nce_top10_acc: 0.825 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:12:28 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:12:56 INFO  lr: 0.0000337 accum_loss: 3.1852 data: 0.001 fwd: 0.172 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.553 nce_top5_acc: 0.789 nce_top10_acc: 0.921 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:12:56 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:13:24 INFO  lr: 0.0000339 accum_loss: 3.1169 data: 0.001 fwd: 0.170 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.222 nce_top5_acc: 0.667 nce_top10_acc: 0.750 nce_top50_acc: 0.972
+
+Sat 29 Mar 2025 11:13:24 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:13:53 INFO  lr: 0.0000341 accum_loss: 3.1732 data: 0.001 fwd: 0.172 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.294 nce_top5_acc: 0.529 nce_top10_acc: 0.735 nce_top50_acc: 0.941
+
+Sat 29 Mar 2025 11:13:53 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:14:21 INFO  lr: 0.0000343 accum_loss: 3.1484 data: 0.001 fwd: 0.170 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.297 nce_top5_acc: 0.622 nce_top10_acc: 0.784 nce_top50_acc: 0.973
+
+Sat 29 Mar 2025 11:14:21 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:14:50 INFO  lr: 0.0000344 accum_loss: 3.1219 data: 0.001 fwd: 0.173 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.429 nce_top5_acc: 0.800 nce_top10_acc: 0.886 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:14:50 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:15:18 INFO  lr: 0.0000346 accum_loss: 3.1910 data: 0.001 fwd: 0.171 bwd: 0.175 nce_samples: 89.000 nce_top1_acc: 0.400 nce_top5_acc: 0.657 nce_top10_acc: 0.771 nce_top50_acc: 0.971
+
+Sat 29 Mar 2025 11:15:18 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:15:46 INFO  lr: 0.0000348 accum_loss: 3.1205 data: 0.001 fwd: 0.173 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.242 nce_top5_acc: 0.667 nce_top10_acc: 0.879 nce_top50_acc: 0.939
+
+Sat 29 Mar 2025 11:15:46 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:16:15 INFO  lr: 0.0000350 accum_loss: 3.1293 data: 0.001 fwd: 0.172 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.143 nce_top5_acc: 0.486 nce_top10_acc: 0.629 nce_top50_acc: 0.971
+
+Sat 29 Mar 2025 11:16:15 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:16:43 INFO  lr: 0.0000351 accum_loss: 3.1650 data: 0.001 fwd: 0.178 bwd: 0.183 nce_samples: 89.000 nce_top1_acc: 0.200 nce_top5_acc: 0.543 nce_top10_acc: 0.629 nce_top50_acc: 0.971
+
+Sat 29 Mar 2025 11:16:43 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:17:11 INFO  lr: 0.0000353 accum_loss: 3.1455 data: 0.001 fwd: 0.169 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.225 nce_top5_acc: 0.525 nce_top10_acc: 0.600 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:17:11 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:17:39 INFO  lr: 0.0000355 accum_loss: 3.1510 data: 0.001 fwd: 0.172 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.575 nce_top5_acc: 0.800 nce_top10_acc: 0.900 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 11:17:39 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:18:08 INFO  lr: 0.0000357 accum_loss: 3.1244 data: 0.001 fwd: 0.177 bwd: 0.184 nce_samples: 89.000 nce_top1_acc: 0.444 nce_top5_acc: 0.750 nce_top10_acc: 0.833 nce_top50_acc: 0.972
+
+Sat 29 Mar 2025 11:18:08 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:18:36 INFO  lr: 0.0000358 accum_loss: 3.1402 data: 0.001 fwd: 0.172 bwd: 0.181 nce_samples: 88.973 nce_top1_acc: 0.297 nce_top5_acc: 0.486 nce_top10_acc: 0.649 nce_top50_acc: 0.946
+
+Sat 29 Mar 2025 11:18:36 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:19:05 INFO  lr: 0.0000360 accum_loss: 3.2051 data: 0.001 fwd: 0.170 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.375 nce_top5_acc: 0.550 nce_top10_acc: 0.775 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:19:05 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:19:33 INFO  lr: 0.0000362 accum_loss: 3.1000 data: 0.001 fwd: 0.176 bwd: 0.188 nce_samples: 89.000 nce_top1_acc: 0.350 nce_top5_acc: 0.700 nce_top10_acc: 0.800 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 11:19:33 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:20:02 INFO  lr: 0.0000364 accum_loss: 3.1389 data: 0.001 fwd: 0.174 bwd: 0.187 nce_samples: 89.000 nce_top1_acc: 0.389 nce_top5_acc: 0.611 nce_top10_acc: 0.806 nce_top50_acc: 0.972
+
+Sat 29 Mar 2025 11:20:02 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:20:30 INFO  lr: 0.0000365 accum_loss: 3.1586 data: 0.001 fwd: 0.177 bwd: 0.183 nce_samples: 89.000 nce_top1_acc: 0.400 nce_top5_acc: 0.700 nce_top10_acc: 0.825 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:20:30 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:20:59 INFO  lr: 0.0000367 accum_loss: 3.1334 data: 0.001 fwd: 0.172 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.289 nce_top5_acc: 0.632 nce_top10_acc: 0.737 nce_top50_acc: 0.974
+
+Sat 29 Mar 2025 11:20:59 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:21:27 INFO  lr: 0.0000369 accum_loss: 3.1391 data: 0.001 fwd: 0.171 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.412 nce_top5_acc: 0.706 nce_top10_acc: 0.824 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:21:27 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:21:55 INFO  lr: 0.0000371 accum_loss: 3.0748 data: 0.001 fwd: 0.171 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.275 nce_top5_acc: 0.700 nce_top10_acc: 0.875 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:21:55 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:22:24 INFO  lr: 0.0000373 accum_loss: 3.1051 data: 0.001 fwd: 0.171 bwd: 0.189 nce_samples: 89.000 nce_top1_acc: 0.270 nce_top5_acc: 0.622 nce_top10_acc: 0.757 nce_top50_acc: 0.973
+
+Sat 29 Mar 2025 11:22:24 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:22:53 INFO  lr: 0.0000374 accum_loss: 3.1531 data: 0.001 fwd: 0.171 bwd: 0.185 nce_samples: 89.000 nce_top1_acc: 0.350 nce_top5_acc: 0.750 nce_top10_acc: 0.825 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 11:22:53 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:23:21 INFO  lr: 0.0000376 accum_loss: 3.1465 data: 0.001 fwd: 0.176 bwd: 0.174 nce_samples: 89.000 nce_top1_acc: 0.316 nce_top5_acc: 0.737 nce_top10_acc: 0.816 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:23:21 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:23:50 INFO  lr: 0.0000378 accum_loss: 3.0818 data: 0.001 fwd: 0.182 bwd: 0.186 nce_samples: 89.000 nce_top1_acc: 0.375 nce_top5_acc: 0.725 nce_top10_acc: 0.800 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:23:50 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:24:18 INFO  lr: 0.0000380 accum_loss: 3.1137 data: 0.001 fwd: 0.183 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.294 nce_top5_acc: 0.588 nce_top10_acc: 0.794 nce_top50_acc: 0.971
+
+Sat 29 Mar 2025 11:24:18 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:24:47 INFO  lr: 0.0000381 accum_loss: 3.0861 data: 0.001 fwd: 0.172 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.400 nce_top5_acc: 0.650 nce_top10_acc: 0.700 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:24:47 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:25:15 INFO  lr: 0.0000383 accum_loss: 3.1010 data: 0.001 fwd: 0.173 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.353 nce_top5_acc: 0.618 nce_top10_acc: 0.794 nce_top50_acc: 0.882
+
+Sat 29 Mar 2025 11:25:15 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:25:44 INFO  lr: 0.0000385 accum_loss: 3.1160 data: 0.001 fwd: 0.171 bwd: 0.184 nce_samples: 89.000 nce_top1_acc: 0.350 nce_top5_acc: 0.525 nce_top10_acc: 0.700 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 11:25:44 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:26:12 INFO  lr: 0.0000387 accum_loss: 3.0680 data: 0.001 fwd: 0.171 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.450 nce_top5_acc: 0.625 nce_top10_acc: 0.725 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:26:12 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:26:41 INFO  lr: 0.0000388 accum_loss: 3.1008 data: 0.001 fwd: 0.172 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.278 nce_top5_acc: 0.528 nce_top10_acc: 0.667 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:26:41 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:27:09 INFO  lr: 0.0000390 accum_loss: 3.1273 data: 0.001 fwd: 0.178 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.457 nce_top5_acc: 0.686 nce_top10_acc: 0.771 nce_top50_acc: 0.914
+
+Sat 29 Mar 2025 11:27:09 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:27:38 INFO  lr: 0.0000392 accum_loss: 3.0971 data: 0.001 fwd: 0.174 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.303 nce_top5_acc: 0.667 nce_top10_acc: 0.788 nce_top50_acc: 0.970
+
+Sat 29 Mar 2025 11:27:38 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:28:07 INFO  lr: 0.0000394 accum_loss: 3.1152 data: 0.001 fwd: 0.172 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.314 nce_top5_acc: 0.600 nce_top10_acc: 0.800 nce_top50_acc: 0.971
+
+Sat 29 Mar 2025 11:28:07 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:28:35 INFO  lr: 0.0000395 accum_loss: 3.1117 data: 0.001 fwd: 0.171 bwd: 0.184 nce_samples: 89.000 nce_top1_acc: 0.350 nce_top5_acc: 0.675 nce_top10_acc: 0.775 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:28:35 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:28:36 INFO  epoch 0 training [time: 6400.19s, train loss: 62842.3750]
+Sat 29 Mar 2025 11:28:41 INFO  Text Item num: 96282
+Sat 29 Mar 2025 11:28:41 INFO  Inference item_data with item_batch_size = 40 len(item_loader) = 2408
+Sat 29 Mar 2025 11:28:45 INFO   not in self.env
+Sat 29 Mar 2025 11:34:52 INFO  epoch 0 evaluating [time: 376.35s, valid_score: 0.044259]
+Sat 29 Mar 2025 11:34:52 INFO  valid result: 
+recall@5 : 0.026555    recall@10 : 0.039035    recall@50 : 0.088125    recall@200 : 0.166315    ndcg@5 : 0.0179941    ndcg@10 : 0.0220085    ndcg@50 : 0.0326147    ndcg@200 : 0.0442589
+Sat 29 Mar 2025 11:35:00 INFO  Saving current: ../ckpt/HLLM-0.pth
+Sat 29 Mar 2025 11:35:05 INFO  lr: 0.0000395 accum_loss: 0.0389 data: 4.252 fwd: 0.266 bwd: 0.189 nce_samples: 89.000 nce_top1_acc: 0.182 nce_top5_acc: 0.667 nce_top10_acc: 0.818 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:35:05 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:35:34 INFO  lr: 0.0000397 accum_loss: 3.0908 data: 0.001 fwd: 0.176 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.371 nce_top5_acc: 0.657 nce_top10_acc: 0.800 nce_top50_acc: 0.971
+
+Sat 29 Mar 2025 11:35:34 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:36:02 INFO  lr: 0.0000399 accum_loss: 3.1145 data: 0.001 fwd: 0.169 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.450 nce_top5_acc: 0.775 nce_top10_acc: 0.775 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 11:36:02 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:36:31 INFO  lr: 0.0000401 accum_loss: 3.0590 data: 0.001 fwd: 0.173 bwd: 0.183 nce_samples: 89.000 nce_top1_acc: 0.550 nce_top5_acc: 0.825 nce_top10_acc: 0.925 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:36:31 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:37:00 INFO  lr: 0.0000402 accum_loss: 3.0488 data: 0.001 fwd: 0.174 bwd: 0.183 nce_samples: 89.000 nce_top1_acc: 0.528 nce_top5_acc: 0.806 nce_top10_acc: 0.861 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:37:00 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:37:29 INFO  lr: 0.0000404 accum_loss: 3.0750 data: 0.001 fwd: 0.176 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.450 nce_top5_acc: 0.675 nce_top10_acc: 0.775 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 11:37:29 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:37:57 INFO  lr: 0.0000406 accum_loss: 3.0656 data: 0.001 fwd: 0.174 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.526 nce_top5_acc: 0.842 nce_top10_acc: 0.895 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:37:57 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:38:26 INFO  lr: 0.0000408 accum_loss: 3.0531 data: 0.001 fwd: 0.170 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.389 nce_top5_acc: 0.778 nce_top10_acc: 0.833 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:38:26 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:38:55 INFO  lr: 0.0000409 accum_loss: 3.0723 data: 0.001 fwd: 0.173 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.225 nce_top5_acc: 0.750 nce_top10_acc: 0.850 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 11:38:55 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:39:23 INFO  lr: 0.0000411 accum_loss: 3.0850 data: 0.001 fwd: 0.177 bwd: 0.182 nce_samples: 89.000 nce_top1_acc: 0.219 nce_top5_acc: 0.625 nce_top10_acc: 0.719 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:39:23 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:39:52 INFO  lr: 0.0000413 accum_loss: 3.1164 data: 0.001 fwd: 0.169 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.237 nce_top5_acc: 0.447 nce_top10_acc: 0.605 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:39:52 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:40:20 INFO  lr: 0.0000415 accum_loss: 3.1018 data: 0.001 fwd: 0.177 bwd: 0.184 nce_samples: 89.000 nce_top1_acc: 0.405 nce_top5_acc: 0.703 nce_top10_acc: 0.865 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:40:20 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:40:49 INFO  lr: 0.0000416 accum_loss: 3.0123 data: 0.001 fwd: 0.179 bwd: 0.188 nce_samples: 89.000 nce_top1_acc: 0.294 nce_top5_acc: 0.618 nce_top10_acc: 0.765 nce_top50_acc: 0.971
+
+Sat 29 Mar 2025 11:40:49 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:41:17 INFO  lr: 0.0000418 accum_loss: 3.0410 data: 0.001 fwd: 0.172 bwd: 0.183 nce_samples: 89.000 nce_top1_acc: 0.325 nce_top5_acc: 0.600 nce_top10_acc: 0.775 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:41:17 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:41:46 INFO  lr: 0.0000420 accum_loss: 3.0586 data: 0.001 fwd: 0.172 bwd: 0.180 nce_samples: 89.000 nce_top1_acc: 0.162 nce_top5_acc: 0.405 nce_top10_acc: 0.676 nce_top50_acc: 0.973
+
+Sat 29 Mar 2025 11:41:46 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:42:15 INFO  lr: 0.0000422 accum_loss: 3.1090 data: 0.001 fwd: 0.175 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.559 nce_top5_acc: 0.853 nce_top10_acc: 0.912 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:42:15 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:42:44 INFO  lr: 0.0000423 accum_loss: 3.0410 data: 0.001 fwd: 0.172 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.306 nce_top5_acc: 0.556 nce_top10_acc: 0.694 nce_top50_acc: 0.972
+
+Sat 29 Mar 2025 11:42:44 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:43:12 INFO  lr: 0.0000425 accum_loss: 3.0180 data: 0.001 fwd: 0.178 bwd: 0.184 nce_samples: 89.000 nce_top1_acc: 0.355 nce_top5_acc: 0.645 nce_top10_acc: 0.710 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:43:12 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:43:41 INFO  lr: 0.0000427 accum_loss: 3.0521 data: 0.001 fwd: 0.171 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.200 nce_top5_acc: 0.525 nce_top10_acc: 0.650 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 11:43:41 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:44:09 INFO  lr: 0.0000429 accum_loss: 3.0873 data: 0.001 fwd: 0.178 bwd: 0.193 nce_samples: 89.000 nce_top1_acc: 0.286 nce_top5_acc: 0.600 nce_top10_acc: 0.714 nce_top50_acc: 0.971
+
+Sat 29 Mar 2025 11:44:09 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:44:38 INFO  lr: 0.0000430 accum_loss: 3.0537 data: 0.001 fwd: 0.172 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.250 nce_top5_acc: 0.472 nce_top10_acc: 0.611 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:44:38 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:45:07 INFO  lr: 0.0000432 accum_loss: 3.0703 data: 0.001 fwd: 0.176 bwd: 0.183 nce_samples: 89.000 nce_top1_acc: 0.459 nce_top5_acc: 0.676 nce_top10_acc: 0.784 nce_top50_acc: 0.946
+
+Sat 29 Mar 2025 11:45:07 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:45:35 INFO  lr: 0.0000434 accum_loss: 3.0645 data: 0.001 fwd: 0.173 bwd: 0.179 nce_samples: 89.000 nce_top1_acc: 0.270 nce_top5_acc: 0.649 nce_top10_acc: 0.757 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:45:35 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:46:04 INFO  lr: 0.0000436 accum_loss: 3.0389 data: 0.001 fwd: 0.171 bwd: 0.176 nce_samples: 89.000 nce_top1_acc: 0.325 nce_top5_acc: 0.650 nce_top10_acc: 0.725 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 11:46:04 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:46:32 INFO  lr: 0.0000438 accum_loss: 3.0723 data: 0.001 fwd: 0.169 bwd: 0.177 nce_samples: 89.000 nce_top1_acc: 0.414 nce_top5_acc: 0.621 nce_top10_acc: 0.724 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:46:32 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:47:01 INFO  lr: 0.0000439 accum_loss: 3.0041 data: 0.001 fwd: 0.171 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.545 nce_top5_acc: 0.667 nce_top10_acc: 0.727 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:47:01 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:47:30 INFO  lr: 0.0000441 accum_loss: 3.0795 data: 0.001 fwd: 0.173 bwd: 0.181 nce_samples: 89.000 nce_top1_acc: 0.276 nce_top5_acc: 0.724 nce_top10_acc: 0.862 nce_top50_acc: 0.966
+
+Sat 29 Mar 2025 11:47:30 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:47:58 INFO  lr: 0.0000443 accum_loss: 3.0631 data: 0.001 fwd: 0.171 bwd: 0.178 nce_samples: 89.000 nce_top1_acc: 0.200 nce_top5_acc: 0.675 nce_top10_acc: 0.800 nce_top50_acc: 0.975
+
+Sat 29 Mar 2025 11:47:58 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:48:27 INFO  lr: 0.0000445 accum_loss: 2.9891 data: 0.001 fwd: 0.174 bwd: 0.184 nce_samples: 89.000 nce_top1_acc: 0.487 nce_top5_acc: 0.795 nce_top10_acc: 0.923 nce_top50_acc: 1.000
+
+Sat 29 Mar 2025 11:48:27 INFO  
+--------------------------------------------------
+Sat 29 Mar 2025 11:48:55 INFO  lr: 0.0000446 accum_loss: 3.0619 data: 0.001 fwd: 0.171 bwd: 0.177 nce_samples: 88.975 nce_top1_acc: 0.450 nce_top5_acc: 0.700 nce_top10_acc: 0.875 nce_top50_acc: 0.950
+
+Sat 29 Mar 2025 11:48:55 INFO  
+--------------------------------------------------

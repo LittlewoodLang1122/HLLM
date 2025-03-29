@@ -2,6 +2,7 @@ mkdir ckpt
 cd ckpt
 wget https://huggingface.co/ByteDance/HLLM/resolve/main/1B_Pixel8M/pytorch_model.bin
 
+# a very good sample, can achieve loss 2.98
 cd code
 python3 main.py \
 --config_file overall/LLM_deepspeed.yaml HLLM/HLLM.yaml \

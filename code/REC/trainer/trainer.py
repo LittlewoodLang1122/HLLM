@@ -231,6 +231,8 @@ class Trainer(object):
                 self.logger.info("\n" + "-"*50)
             if self.config['debug'] and batch_idx >= 5:
                 break
+            if batch_idx >= 18000:
+                break
 
         return total_loss
 
@@ -328,8 +330,8 @@ class Trainer(object):
     def fit(self, train_data, valid_data=None, verbose=True, saved=True, show_progress=False, callback_fn=None):
         if self.scheduler_config:
             warmup_rate = self.scheduler_config.get('warmup', 0.001)
-            tot_steps = len(train_data) * self.epochs
-            warmup_steps = tot_steps * warmup_rate
+            tot_steps = len(train_data) * self.epochs // self.gradient_accumulation_steps
+            warmup_steps = int(tot_steps * warmup_rate)
             self.lr_scheduler = self._build_scheduler(warmup_steps=warmup_steps, tot_steps=tot_steps)
 
         world_size, local_world_size = int(os.environ['WORLD_SIZE']), int(os.environ['LOCAL_WORLD_SIZE'])
