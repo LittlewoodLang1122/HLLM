@@ -214,8 +214,6 @@ class Trainer(object):
                     self.lr_scheduler.step()
 
             bwd_time = t.time()
-            if self.scheduler_config:
-                self.lr_scheduler.step()
             if show_progress and self.rank == 0 and batch_idx % self.update_interval == 0:
                 avg_accum_loss = accum_loss / self.update_interval
                 accum_loss = 0.0

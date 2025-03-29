@@ -88,7 +88,7 @@ class HLLM(BaseModel):
         if self.item_emb_token_n > 1:
             raise NotImplementedError(f"Not support item_emb_token_n {self.item_emb_token_n} > 1")
         if config['use_LoRA']:
-            self.item_llm = add_lora_to_llm(self.item_llm, r=config['LoRA_Rank'], alpha=config["LoRA_Alpha"], dropout=config["LoRA_Dropout"])
+            # self.item_llm = add_lora_to_llm(self.item_llm, r=config['LoRA_Rank'], alpha=config["LoRA_Alpha"], dropout=config["LoRA_Dropout"])
             self.user_llm = add_lora_to_llm(self.user_llm, r=config['LoRA_Rank'], alpha=config["LoRA_Alpha"], dropout=config["LoRA_Dropout"])
 
         if self.item_emb_token_n > 0:

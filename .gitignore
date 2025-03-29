@@ -1,7 +1,10 @@
 *.pyc
 *.log
+*.bin
 code/log/
 code/log_tensorboard/
 code/saved/
 dataset/Pixel200K.csv
+dataset/Pixel8M.csv
 information/Pixel200K.csv
+information/Pixel8M.csv

@@ -86,6 +86,21 @@ def run_loop(local_rank, config_file=None, saved=True, extra_args=[]):
     print(f"{len(train_loader) = }")
 
     model = get_model(config['model'])(config, dataload)
+    if config['use_trained_model'] == True and (config['val_only'] != True or config['val_only'] == None):
+        ckpt_path = os.path.join(config['checkpoint_dir'], 'pytorch_model.bin')
+        ckpt = torch.load(ckpt_path, map_location='cpu')
+        item_state_dict = {k.replace("item_llm.", ""): v for k, v in ckpt.items() if k.startswith("item_llm.")}
+        model.item_llm.load_state_dict(item_state_dict, False)
+        logger.info('use pretrained item_llm')
+        for param in model.item_llm.parameters():
+            param.requires_grad = False
+        # model.load_state_dict(ckpt, False)
+        # import random
+        # for param in model.parameters():
+        #     if random.random() > 0.05:
+        #         param.requires_grad = False
+
+
     # model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model).to(device)
 
     world_size = torch.distributed.get_world_size()

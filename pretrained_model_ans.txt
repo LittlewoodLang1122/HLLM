@@ -1,0 +1,71 @@
+Sat 29 Mar 2025 04:11:49 INFO  Pixel200K
+The number of users: 200001
+Average actions of users: 19.82828
+The number of items: 96283
+Average actions of items: 41.187927130720176
+The number of inters: 3965656
+The sparsity of the dataset: 99.9794063532928%
+Sat 29 Mar 2025 04:11:50 INFO  HLLM(
+  (item_llm): LlamaForCausalLM(
+    (model): LlamaModel(
+      (embed_tokens): Embedding(32000, 2048)
+      (layers): ModuleList(
+        (0-21): 22 x LlamaDecoderLayer(
+          (self_attn): LlamaAttention(
+            (q_proj): Linear(in_features=2048, out_features=2048, bias=False)
+            (k_proj): Linear(in_features=2048, out_features=256, bias=False)
+            (v_proj): Linear(in_features=2048, out_features=256, bias=False)
+            (o_proj): Linear(in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): LlamaRotaryEmbedding()
+          )
+          (mlp): LlamaMLP(
+            (gate_proj): Linear(in_features=2048, out_features=5632, bias=False)
+            (up_proj): Linear(in_features=2048, out_features=5632, bias=False)
+            (down_proj): Linear(in_features=5632, out_features=2048, bias=False)
+            (act_fn): SiLUActivation()
+          )
+          (input_layernorm): LlamaRMSNorm()
+          (post_attention_layernorm): LlamaRMSNorm()
+        )
+      )
+      (norm): LlamaRMSNorm()
+    )
+    (lm_head): Linear(in_features=2048, out_features=32000, bias=False)
+  )
+  (user_llm): LlamaForCausalLM(
+    (model): LlamaModel(
+      (embed_tokens): Embedding(32000, 2048)
+      (layers): ModuleList(
+        (0-21): 22 x LlamaDecoderLayer(
+          (self_attn): LlamaAttention(
+            (q_proj): Linear(in_features=2048, out_features=2048, bias=False)
+            (k_proj): Linear(in_features=2048, out_features=256, bias=False)
+            (v_proj): Linear(in_features=2048, out_features=256, bias=False)
+            (o_proj): Linear(in_features=2048, out_features=2048, bias=False)
+            (rotary_emb): LlamaRotaryEmbedding()
+          )
+          (mlp): LlamaMLP(
+            (gate_proj): Linear(in_features=2048, out_features=5632, bias=False)
+            (up_proj): Linear(in_features=2048, out_features=5632, bias=False)
+            (down_proj): Linear(in_features=5632, out_features=2048, bias=False)
+            (act_fn): SiLUActivation()
+          )
+          (input_layernorm): LlamaRMSNorm()
+          (post_attention_layernorm): LlamaRMSNorm()
+        )
+      )
+      (norm): LlamaRMSNorm()
+    )
+    (lm_head): Linear(in_features=2048, out_features=32000, bias=False)
+  )
+  (item_proj): Identity()
+)
+Trainable parameters: 2200098817.0
+Sat 29 Mar 2025 04:12:06 INFO  Eval only model load from ../ckpt/pytorch_model.bin
+Sat 29 Mar 2025 04:12:14 INFO  msg.unexpected_keys = []
+Sat 29 Mar 2025 04:12:14 INFO  msg.missing_keys = []
+Sat 29 Mar 2025 04:12:14 INFO  Use deepspeed strategy
+Sat 29 Mar 2025 04:12:30 INFO  Text Item num: 96282
+Sat 29 Mar 2025 04:12:30 INFO  Inference item_data with item_batch_size = 40 len(item_loader) = 2408
+Sat 29 Mar 2025 04:12:34 INFO   not in self.env
+Sat 29 Mar 2025 04:19:49 INFO  test result: OrderedDict([('recall@5', 0.058445), ('recall@10', 0.08313), ('recall@50', 0.17273), ('recall@200', 0.297725), ('ndcg@5', 0.0400183), ('ndcg@10', 0.0479748), ('ndcg@50', 0.0674109), ('ndcg@200', 0.0861052)])
