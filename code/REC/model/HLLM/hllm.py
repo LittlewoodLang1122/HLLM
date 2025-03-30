@@ -29,6 +29,7 @@ from REC.model.HLLM.modeling_mistral import MistralForCausalLM
 from REC.model.HLLM.modeling_bert import BertModel
 from REC.model.HLLM.baichuan.modeling_baichuan import BaichuanForCausalLM
 from REC.model.HLLM.modeling_qwen2 import Qwen2ForCausalLM
+from REC.model.HLLM.modeling_gpt2 import GPT2ForCausalLM
 
 def get_lora_config(model, r=8, alpha=16, dropout=0.05):
     model_type = getattr(model.config, "model_type", "").lower()
@@ -165,6 +166,14 @@ class HLLM(BaseModel):
                 return Qwen2ForCausalLM.from_pretrained(pretrain_dir, config=hf_config)
             else:
                 return Qwen2ForCausalLM(config=hf_config).cuda()
+        elif isinstance(hf_config, transformers.GPT2Config):
+            hf_config.use_ft_flash_attn = self.use_ft_flash_attn
+            self.logger.info(f'Using flash attention {hf_config.use_ft_flash_attn} for GPT2')
+            self.logger.info(f'Init {init} for GPT2')
+            if init:
+                return GPT2ForCausalLM.from_pretrained(pretrain_dir, config=hf_config)
+            else:
+                return GPT2ForCausalLM(config=hf_config).cuda()
         elif getattr(hf_config, "model_type", None) == "baichuan":
             hf_config.use_ft_flash_attn = self.use_ft_flash_attn
             self.logger.info(f'Using flash attention {hf_config.use_ft_flash_attn} for baichuan')
