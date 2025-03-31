@@ -31,7 +31,7 @@ optim_args: {
 }
 scheduler_args: {
   type: cosine,
-  warmup: 0.05
+  warmup: 0.1
 }
 
 # eval settings

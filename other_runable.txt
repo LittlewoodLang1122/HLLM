@@ -30,17 +30,17 @@ python3 main.py \
 --loss nce \
 --epochs 3 \
 --dataset Pixel200K \
---train_batch_size 4 \
---gradient_accumulation_steps 4 \
+--train_batch_size 8 \
+--gradient_accumulation_steps 2 \
 --MAX_TEXT_LENGTH 64 \
 --MAX_ITEM_LIST_LENGTH 10 \
 --checkpoint_dir ../ckpt \
---optim_args.learning_rate 3e-5 \
+--optim_args.learning_rate 2.5e-5 \
 --item_pretrain_dir TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T \
 --user_pretrain_dir openai-community/gpt2 \
 --text_path /root/HLLM/information \
 --use_trained_model True \
---use_LoRA True \
+--use_LoRA False \
 --LoRA_Rank 16 \
 --LoRA_Alpha 32 \
 --debug False

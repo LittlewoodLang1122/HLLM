@@ -231,7 +231,7 @@ class Trainer(object):
                 self.logger.info("\n" + "-"*50)
             if self.config['debug'] and batch_idx >= 5:
                 break
-            if batch_idx >= 4500:
+            if batch_idx >= 9000:
                 break
 
         return total_loss
